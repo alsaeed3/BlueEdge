@@ -34,6 +34,11 @@ const routes = [
     href: '/tenants',
   },
   {
+    label: 'Potential Clients',
+    icon: Users,
+    href: '/potential-clients',
+  },
+  {
     label: 'Analytics',
     icon: BarChart3,
     href: '/analytics',
