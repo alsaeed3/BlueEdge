@@ -78,7 +78,8 @@ const recentActivities = [
     property: "Marina Waterfront Tower",
     user: "Ahmed Hassan",
     time: "10 minutes ago",
-    avatar: "/avatar-1.png",
+    // Removed avatar reference to prevent 404 errors
+    avatar: "",
   },
   {
     id: 2,
@@ -86,7 +87,8 @@ const recentActivities = [
     property: "Downtown Heights",
     user: "Sarah Johnson",
     time: "2 hours ago",
-    avatar: "/avatar-2.png",
+    // Removed avatar reference to prevent 404 errors
+    avatar: "",
   },
   {
     id: 3,
@@ -94,7 +96,8 @@ const recentActivities = [
     property: "Palm Residence Villa",
     user: "Mohammed Al Maktoum",
     time: "4 hours ago",
-    avatar: "/avatar-3.png",
+    // Removed avatar reference to prevent 404 errors
+    avatar: "",
   },
   {
     id: 4,
@@ -102,7 +105,8 @@ const recentActivities = [
     property: "Bluewater Apartments",
     user: "Lisa Wong",
     time: "Yesterday",
-    avatar: "/avatar-4.png",
+    // Removed avatar reference to prevent 404 errors
+    avatar: "",
   },
 ];
 
@@ -322,7 +326,7 @@ export default function DashboardPage() {
               {recentActivities.map((activity) => (
                 <div key={activity.id} className="flex items-start gap-4">
                   <Avatar className="h-9 w-9">
-                    <AvatarImage src={activity.avatar} alt={activity.user} />
+                    {/* Using fallback instead of missing avatar image to prevent 404 errors */}
                     <AvatarFallback>{activity.user.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <div className="space-y-1">

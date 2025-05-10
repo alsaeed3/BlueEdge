@@ -39,7 +39,7 @@ const properties = [
     status: "Active",
     units: 45,
     occupiedUnits: 38,
-    image: "/building1.jpg",
+    // Removed image property to prevent 404 errors
   },
   {
     id: 2,
@@ -50,7 +50,7 @@ const properties = [
     status: "Active",
     units: 1,
     occupiedUnits: 1,
-    image: "/building2.jpg",
+    // Removed image property to prevent 404 errors
   },
   {
     id: 3,
@@ -61,7 +61,7 @@ const properties = [
     status: "Under Maintenance",
     units: 80,
     occupiedUnits: 65,
-    image: "/building3.jpg",
+    // Removed image property to prevent 404 errors
   },
   {
     id: 4,
@@ -72,7 +72,7 @@ const properties = [
     status: "Active",
     units: 25,
     occupiedUnits: 18,
-    image: "/building4.jpg",
+    // Removed image property to prevent 404 errors
   },
   {
     id: 5,
@@ -83,7 +83,7 @@ const properties = [
     status: "Active",
     units: 120,
     occupiedUnits: 95,
-    image: "/building5.jpg",
+    // Removed image property to prevent 404 errors
   },
   {
     id: 6,
@@ -94,7 +94,7 @@ const properties = [
     status: "Under Renovation",
     units: 12,
     occupiedUnits: 8,
-    image: "/building6.jpg",
+    // Removed image property to prevent 404 errors
   },
   {
     id: 7,
@@ -105,7 +105,7 @@ const properties = [
     status: "Active",
     units: 60,
     occupiedUnits: 42,
-    image: "/building7.jpg",
+    // Removed image property to prevent 404 errors
   },
   {
     id: 8,
@@ -116,7 +116,7 @@ const properties = [
     status: "Active",
     units: 150,
     occupiedUnits: 120,
-    image: "/building8.jpg",
+    // Removed image property to prevent 404 errors
   },
 ];
 

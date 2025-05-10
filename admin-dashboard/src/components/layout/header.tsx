@@ -92,7 +92,7 @@ export function Header() {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="flex items-center gap-2">
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src="/avatar-placeholder.png" />
+                  {/* Removed image to prevent 404 errors */}
                   <AvatarFallback>
                     <User className="h-4 w-4" />
                   </AvatarFallback>
