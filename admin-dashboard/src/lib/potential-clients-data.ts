@@ -201,7 +201,7 @@ export const simeonWansiScenario: ScenarioStep[] = [
     title: "Social Media Detection",
     agentAction: {
       role: "Social Intelligence Agent",
-      avatar: "/avatars/elena_morozova.png",
+      avatar: "/avatars/bot.png",
       title: "Social Media Analyst",
       expertise: "Digital Footprint Analysis",
       thinkingProcess: [
@@ -226,7 +226,7 @@ export const simeonWansiScenario: ScenarioStep[] = [
     title: "Real Estate Opportunity",
     agentAction: {
       role: "Real Estate Marketing Agent",
-      avatar: "/avatars/isabelle_tremblay.png",
+      avatar: "/avatars/bot.png",
       title: "Property Marketing Specialist",
       expertise: "Luxury Real Estate Targeting",
       thinkingProcess: [
@@ -277,7 +277,7 @@ export const simeonWansiScenario: ScenarioStep[] = [
     title: "Contract Generation",
     agentAction: {
       role: "Legal Documentation Agent",
-      avatar: "/avatars/daniel_nkrumah.png",
+      avatar: "/avatars/bot.png",
       title: "Legal Contract Specialist",
       expertise: "Real Estate Documentation",
       thinkingProcess: [
@@ -308,7 +308,7 @@ export const simeonWansiScenario: ScenarioStep[] = [
     title: "Loyalty Program Integration",
     agentAction: {
       role: "Customer Loyalty Agent",
-      avatar: "/avatars/lina_krause.png",
+      avatar: "/avatars/bot.png",
       title: "Loyalty Program Director",
       expertise: "VIP Client Relationships",
       thinkingProcess: [
@@ -338,7 +338,7 @@ export const simeonWansiScenario: ScenarioStep[] = [
     title: "Lease Opportunity",
     agentAction: {
       role: "Finance Solutions Agent",
-      avatar: "/avatars/raj_mehta.png",
+      avatar: "/avatars/bot.png",
       title: "Automotive Finance Specialist",
       expertise: "Executive Leasing Programs",
       thinkingProcess: [
@@ -368,7 +368,7 @@ export const simeonWansiScenario: ScenarioStep[] = [
     title: "Vehicle Sale",
     agentAction: {
       role: "Automotive Sales Agent",
-      avatar: "/avatars/jonas_schmidt.png",
+      avatar: "/avatars/bot.png",
       title: "Luxury Vehicle Consultant",
       expertise: "Executive Auto Matching",
       thinkingProcess: [
@@ -398,7 +398,7 @@ export const simeonWansiScenario: ScenarioStep[] = [
     title: "Investment Opportunity",
     agentAction: {
       role: "Wealth Management Agent",
-      avatar: "/avatars/sofia_grimaldi.png",
+      avatar: "/avatars/bot.png",
       title: "Investment Strategy Director",
       expertise: "Executive Wealth Planning",
       thinkingProcess: [

@@ -92,11 +92,12 @@ const AgentThinking = ({ agent, onComplete }: AgentThinkingProps) => {
         <EnhancedAvatar 
           src={agent.avatar} 
           alt={agent.role}
-          className="size-12 border-2 border-blue-500"
+          className="size-12 border-2 border-blue-500 ring-2 ring-blue-300 ring-opacity-50"
         />
         <div>
           <h3 className="font-semibold text-lg">{agent.role}</h3>
           <div className="flex gap-2">
+            <Badge variant="outline" className="bg-blue-100 text-blue-800">AI Agent</Badge>
             <Badge variant="outline">{agent.title}</Badge>
             <Badge variant="outline" className="bg-blue-50">{agent.expertise}</Badge>
           </div>
@@ -471,11 +472,12 @@ const ClientScenarioView = ({ clientId }: { clientId: string }) => {
                         <EnhancedAvatar 
                           src={step.agentAction.avatar} 
                           alt={step.agentAction.role}
-                          className="size-12 border-2 border-blue-500"
+                          className="size-12 border-2 border-blue-500 ring-2 ring-blue-300 ring-opacity-50"
                         />
                         <div>
                           <h3 className="font-semibold text-lg">{step.agentAction.role}</h3>
                           <div className="flex gap-2">
+                            <Badge variant="outline" className="bg-blue-100 text-blue-800">AI Agent</Badge>
                             <Badge variant="outline">{step.agentAction.title}</Badge>
                             <Badge variant="outline" className="bg-blue-50">{step.agentAction.expertise}</Badge>
                           </div>
