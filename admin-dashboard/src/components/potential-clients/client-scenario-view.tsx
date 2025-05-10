@@ -66,6 +66,8 @@ const AgentThinking = ({ agent, onComplete }: AgentThinkingProps) => {
         phaseTimers.current.completion = setTimeout(() => {
           console.log(`Agent ${agent.role} - Complete`);
           setIsComplete(true);
+          
+          // Notify parent component that agent is complete
           onComplete();
         }, 3000); // Wait 3 seconds after showing content before advancing
       }, 3000); // 3 seconds for action phase
@@ -84,7 +86,6 @@ const AgentThinking = ({ agent, onComplete }: AgentThinkingProps) => {
       className="mb-8"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
       <div className="flex items-start gap-3 mb-4">
@@ -334,8 +335,10 @@ const ClientScenarioView = ({ clientId }: { clientId: string }) => {
   // Handle agent completion
   const handleAgentComplete = () => {
     if (currentStep && currentStep.agentAction) {
+      console.log(`Agent completed for step: ${currentStep.id}`);
+      // Update both states in the same render cycle
       setIsAgentComplete(true);
-      setCompletedAgents([...completedAgents, currentStep.id]);
+      setCompletedAgents(prev => [...prev, currentStep.id]);
     }
   };
 
@@ -451,7 +454,7 @@ const ClientScenarioView = ({ clientId }: { clientId: string }) => {
               <h2 className="font-semibold">{step.title}</h2>
             </div>
             
-            {/* Agent thinking - show animation for current step, completed content for past steps */}
+            {/* Agent thinking - show animation for current step, completed content for past/completed steps */}
             {step.agentAction && (
               <div className="mb-8">
                 {/* Current step that's not completed shows thinking animation */}
@@ -461,37 +464,39 @@ const ClientScenarioView = ({ clientId }: { clientId: string }) => {
                     onComplete={handleAgentComplete}
                   />
                 ) : (
-                  /* Show completed content for past steps or completed current step */
-                  <>
-                    <div className="flex items-start gap-3 mb-4">
-                      <EnhancedAvatar 
-                        src={step.agentAction.avatar} 
-                        alt={step.agentAction.role}
-                        className="size-12 border-2 border-blue-500"
-                      />
-                      <div>
-                        <h3 className="font-semibold text-lg">{step.agentAction.role}</h3>
-                        <div className="flex gap-2">
-                          <Badge variant="outline">{step.agentAction.title}</Badge>
-                          <Badge variant="outline" className="bg-blue-50">{step.agentAction.expertise}</Badge>
+                  /* Show completed content for past steps OR current completed step */
+                  (idx < currentStepIndex || completedAgents.includes(step.id)) && (
+                    <>
+                      <div className="flex items-start gap-3 mb-4">
+                        <EnhancedAvatar 
+                          src={step.agentAction.avatar} 
+                          alt={step.agentAction.role}
+                          className="size-12 border-2 border-blue-500"
+                        />
+                        <div>
+                          <h3 className="font-semibold text-lg">{step.agentAction.role}</h3>
+                          <div className="flex gap-2">
+                            <Badge variant="outline">{step.agentAction.title}</Badge>
+                            <Badge variant="outline" className="bg-blue-50">{step.agentAction.expertise}</Badge>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    
-                    <Card className="ml-12 mb-4 border-l-4 border-l-blue-500 py-0">
-                      <CardContent className="text-sm">
-                        {idx === currentStepIndex && completedAgents.includes(step.id) ? (
-                          <StreamingText text={step.agentAction.finalContent} speed={10} />
-                        ) : (
-                          step.agentAction.finalContent
-                        )}
-                      </CardContent>
-                    </Card>
-                    
-                    <div className="ml-12 flex justify-end">
-                      <Badge className="bg-green-100 text-green-800">Task Complete</Badge>
-                    </div>
-                  </>
+                      
+                      <Card className="ml-12 mb-4 border-l-4 border-l-blue-500 py-0">
+                        <CardContent className="text-sm">
+                          {idx === currentStepIndex ? (
+                            <div className="text-sm">{step.agentAction.finalContent}</div>
+                          ) : (
+                            step.agentAction.finalContent
+                          )}
+                        </CardContent>
+                      </Card>
+                      
+                      <div className="ml-12 flex justify-end">
+                        <Badge className="bg-green-100 text-green-800">Task Complete</Badge>
+                      </div>
+                    </>
+                  )
                 )}
               </div>
             )}
