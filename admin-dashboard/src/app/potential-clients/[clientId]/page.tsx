@@ -11,10 +11,9 @@ interface ClientScenarioPageProps {
 
 export default async function ClientScenarioPage({ params }: ClientScenarioPageProps) {
   // In Next.js App Router, we need to properly handle params
-  const clientId = params?.clientId;
-  
-  // Wait for any promises to resolve (if any)
-  await Promise.resolve();
+  // Await params to resolve any Promise-like behavior
+  const resolvedParams = await params;
+  const clientId = resolvedParams.clientId;
   
   // Check if client exists
   const client = potentialClients.find(client => client.id === clientId);
