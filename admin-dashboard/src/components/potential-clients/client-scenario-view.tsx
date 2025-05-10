@@ -6,13 +6,21 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { simeonWansiScenario, ScenarioStep, AgentAction } from '@/lib/potential-clients-data';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { EnhancedAvatar } from '@/components/ui/enhanced-avatar';
+import ErrorBoundary from '@/components/ui/error-boundary';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, BrainCircuit, Sparkles } from 'lucide-react';
 
 // Text streaming effect component
-const StreamingText = ({ text, speed = 15, className = "" }) => {
+interface StreamingTextProps {
+  text: string;
+  speed?: number;
+  className?: string;
+}
+
+const StreamingText = ({ text, speed = 15, className = "" }: StreamingTextProps) => {
   const [displayedText, setDisplayedText] = useState("");
   const [index, setIndex] = useState(0);
   
@@ -31,27 +39,45 @@ const StreamingText = ({ text, speed = 15, className = "" }) => {
 };
 
 // Agent thinking component with phased display
-const AgentThinking = ({ agent, onComplete }: { agent: AgentAction, onComplete: () => void }) => {
+interface AgentThinkingProps {
+  agent: AgentAction;
+  onComplete: () => void;
+}
+
+const AgentThinking = ({ agent, onComplete }: AgentThinkingProps) => {
   const [phase, setPhase] = useState<"thinking" | "action" | "execution">("thinking");
   const [isComplete, setIsComplete] = useState(false);
+  const phaseTimers = useRef<{thinking?: NodeJS.Timeout, action?: NodeJS.Timeout, completion?: NodeJS.Timeout}>({});
   
   useEffect(() => {
+    console.log(`Agent thinking started: ${agent.role}`);
+    
     // Simulate thinking phase timing
-    const thinkingTimer = setTimeout(() => {
+    phaseTimers.current.thinking = setTimeout(() => {
+      console.log(`Agent ${agent.role} - Action phase`);
       setPhase("action");
       
       // Simulate action phase timing
-      const actionTimer = setTimeout(() => {
+      phaseTimers.current.action = setTimeout(() => {
+        console.log(`Agent ${agent.role} - Execution phase`);
         setPhase("execution");
-        setIsComplete(true);
-        onComplete();
+        
+        // Add a delay after showing the execution content before marking as complete
+        phaseTimers.current.completion = setTimeout(() => {
+          console.log(`Agent ${agent.role} - Complete`);
+          setIsComplete(true);
+          onComplete();
+        }, 3000); // Wait 3 seconds after showing content before advancing
       }, 3000); // 3 seconds for action phase
-      
-      return () => clearTimeout(actionTimer);
-    }, 5000); // 5 seconds for thinking phase
+    }, 4000); // 4 seconds for thinking phase (slightly shorter for better UX)
     
-    return () => clearTimeout(thinkingTimer);
-  }, [onComplete]);
+    // Cleanup timers on unmount
+    return () => {
+      Object.values(phaseTimers.current).forEach(timer => {
+        if (timer) clearTimeout(timer);
+      });
+    };
+  }, [agent.role, onComplete]);
   
   return (
     <motion.div 
@@ -62,10 +88,11 @@ const AgentThinking = ({ agent, onComplete }: { agent: AgentAction, onComplete: 
       transition={{ duration: 0.5 }}
     >
       <div className="flex items-start gap-3 mb-4">
-        <Avatar className="size-12 border-2 border-blue-500">
-          <AvatarImage src={agent.avatar} alt={agent.role} />
-          <AvatarFallback>{agent.role.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-        </Avatar>
+        <EnhancedAvatar 
+          src={agent.avatar} 
+          alt={agent.role}
+          className="size-12 border-2 border-blue-500"
+        />
         <div>
           <h3 className="font-semibold text-lg">{agent.role}</h3>
           <div className="flex gap-2">
@@ -75,8 +102,8 @@ const AgentThinking = ({ agent, onComplete }: { agent: AgentAction, onComplete: 
         </div>
       </div>
 
-      <Card className="ml-12 mb-4 border-l-4 border-l-blue-500">
-        <CardContent className="pt-4">
+      <Card className="ml-12 mb-4 border-l-4 border-l-blue-500 py-0">
+        <CardContent>
           {phase === "thinking" && (
             <div className="space-y-3">
               <div className="flex items-center gap-2 mb-4">
@@ -143,7 +170,16 @@ const AgentThinking = ({ agent, onComplete }: { agent: AgentAction, onComplete: 
 };
 
 // Client response component
-const ClientResponse = ({ response }) => {
+interface ClientResponseProps {
+  response: {
+    content: string;
+    interestPoints?: string[];
+    decisionFactors?: string[];
+    communicationMethod?: string;
+  }
+}
+
+const ClientResponse = ({ response }: ClientResponseProps) => {
   return (
     <motion.div 
       className="mb-8"
@@ -158,14 +194,15 @@ const ClientResponse = ({ response }) => {
             <Badge variant="outline" className="bg-gray-50">CTO, Dubai Technologies LLC</Badge>
           </div>
         </div>
-        <Avatar className="size-12 border-2 border-gray-300">
-          <AvatarImage src="/avatars/simeon_wansi.png" alt="Simeon Wansi" />
-          <AvatarFallback>SW</AvatarFallback>
-        </Avatar>
+        <EnhancedAvatar 
+          src="/avatars/simeon_wansi.png" 
+          alt="Simeon Wansi"
+          className="size-12 border-2 border-gray-300"
+        />
       </div>
 
-      <Card className="mr-12 mb-4 border-r-4 border-r-gray-400 bg-gray-50">
-        <CardContent className="pt-4">
+      <Card className="mr-12 mb-4 border-r-4 border-r-gray-400 bg-gray-50 py-0">
+        <CardContent>
           <div className="text-sm">
             <StreamingText text={response.content} speed={10} />
           </div>
@@ -207,7 +244,15 @@ const ClientResponse = ({ response }) => {
 };
 
 // Visual content component (documents, products, etc.)
-const VisualContent = ({ content }) => {
+interface VisualContentProps {
+  content: {
+    type: string;
+    image?: string;
+    content: string;
+  }
+}
+
+const VisualContent = ({ content }: VisualContentProps) => {
   return (
     <motion.div 
       className="my-12 max-w-2xl mx-auto"
@@ -215,7 +260,7 @@ const VisualContent = ({ content }) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
     >
-      <Card className="overflow-hidden">
+      <Card className="overflow-hidden py-0">
         <div className="bg-gradient-to-r from-blue-600 to-violet-600 text-white p-4">
           <h3 className="font-medium">{content.type.charAt(0).toUpperCase() + content.type.slice(1)} Visualization</h3>
         </div>
@@ -226,6 +271,11 @@ const VisualContent = ({ content }) => {
               src={content.image} 
               alt={content.type} 
               className="max-h-64 object-contain rounded-md"
+              loading="lazy"
+              onError={(e) => {
+                // Fallback to a generic image or hide
+                e.currentTarget.style.display = 'none';
+              }}
             />
           </div>
         )}
@@ -238,17 +288,48 @@ const VisualContent = ({ content }) => {
   );
 };
 
-// Main client scenario component
+// Main client scenario component with TypeScript interface definitions
+interface StreamingTextProps {
+  text: string;
+  speed?: number;
+  className?: string;
+}
+
+interface ClientResponseProps {
+  response: {
+    content: string;
+    interestPoints?: string[];
+    decisionFactors?: string[];
+    communicationMethod?: string;
+  }
+}
+
+interface VisualContentProps {
+  content: {
+    type: string;
+    image?: string;
+    content: string;
+  }
+}
+
 const ClientScenarioView = ({ clientId }: { clientId: string }) => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [completedAgents, setCompletedAgents] = useState<string[]>([]);
   const [isAgentComplete, setIsAgentComplete] = useState(false);
+  const [stepsInProgress, setStepsInProgress] = useState<string[]>([]);
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Get scenario steps for the client
   const scenarioSteps = simeonWansiScenario;
   const currentStep = scenarioSteps[currentStepIndex];
+
+  // When a new step becomes current, add it to in-progress steps
+  useEffect(() => {
+    if (currentStep && !stepsInProgress.includes(currentStep.id)) {
+      setStepsInProgress([...stepsInProgress, currentStep.id]);
+    }
+  }, [currentStepIndex, currentStep, stepsInProgress]);
 
   // Handle agent completion
   const handleAgentComplete = () => {
@@ -263,34 +344,51 @@ const ClientScenarioView = ({ clientId }: { clientId: string }) => {
     let timeout: NodeJS.Timeout;
     
     if (currentStep) {
-      // If the step has a client response or visual content and the agent is complete (or there is no agent)
-      if ((currentStep.clientResponse || currentStep.visualContent) && 
-          (isAgentComplete || !currentStep.agentAction)) {
+      const shouldAdvance = 
+        // If agent is complete or there is no agent action
+        (isAgentComplete || !currentStep.agentAction) && 
+        // And step has a response or content (or it's the first step)
+        (currentStep.clientResponse || currentStep.visualContent || currentStepIndex === 0);
+      
+      if (shouldAdvance) {
+        // Log the current state for debugging
+        console.log(`Step ${currentStepIndex} (${currentStep.id}) complete, advancing...`);
+        console.log(`Agent complete: ${isAgentComplete}, Has agent: ${!!currentStep.agentAction}`);
+        
         timeout = setTimeout(() => {
           const nextIndex = currentStepIndex + 1;
           
           // Check if there are more steps
           if (nextIndex < scenarioSteps.length) {
+            console.log(`Moving to step ${nextIndex}: ${scenarioSteps[nextIndex].id}`);
             setCurrentStepIndex(nextIndex);
             setIsAgentComplete(false);
-            // Scroll to the latest content
+            
+            // Scroll to the latest content with a small delay to ensure rendering
             setTimeout(() => {
-              containerRef.current?.scrollTo({
-                top: containerRef.current.scrollHeight,
-                behavior: 'smooth'
-              });
-            }, 100);
+              if (containerRef.current) {
+                containerRef.current.scrollTo({
+                  top: containerRef.current.scrollHeight,
+                  behavior: 'smooth'
+                });
+              }
+            }, 300); // Increased delay for more reliable scrolling
+          } else {
+            console.log('Reached end of scenario steps');
           }
-        }, 8000); // Wait 8 seconds between advancing steps
+        }, 6000); // Slightly reduced wait time between steps for better UX
       }
     }
     
-    return () => clearTimeout(timeout);
+    return () => {
+      if (timeout) clearTimeout(timeout);
+    };
   }, [currentStepIndex, isAgentComplete, currentStep, scenarioSteps]);
 
   return (
-    <div className="container mx-auto py-6">
-      <div className="flex justify-between items-center mb-8">
+    <ErrorBoundary>
+      <div className="container mx-auto py-6">
+        <div className="flex justify-between items-center mb-8">
         <Button 
           variant="ghost" 
           className="flex items-center gap-1" 
@@ -307,10 +405,11 @@ const ClientScenarioView = ({ clientId }: { clientId: string }) => {
       </div>
       
       <div className="flex items-center gap-4 mb-8">
-        <Avatar className="size-16 border-2 border-blue-500">
-          <AvatarImage src="/avatars/simeon_wansi.png" alt="Simeon Wansi" />
-          <AvatarFallback>SW</AvatarFallback>
-        </Avatar>
+        <EnhancedAvatar 
+          src="/avatars/simeon_wansi.png"
+          alt="Simeon Wansi"
+          className="size-16 border-2 border-blue-500"
+        />
         <div>
           <h1 className="text-2xl font-bold">Simeon Wansi</h1>
           <p className="text-gray-600">CTO at Dubai Technologies LLC</p>
@@ -347,35 +446,29 @@ const ClientScenarioView = ({ clientId }: { clientId: string }) => {
         className="bg-white rounded-lg shadow-sm border p-6 overflow-y-auto max-h-[calc(100vh-280px)]"
       >
         {scenarioSteps.slice(0, currentStepIndex + 1).map((step, idx) => (
-          <div key={step.id}>
+          <div key={step.id} className="mb-12">
             <div className="py-2 px-4 bg-gray-100 rounded-md mb-6">
               <h2 className="font-semibold">{step.title}</h2>
             </div>
             
-            {step.agentAction && (idx === currentStepIndex || completedAgents.includes(step.id)) && (
-              <AgentThinking 
-                agent={step.agentAction} 
-                onComplete={handleAgentComplete}
-              />
-            )}
-            
-            {step.clientResponse && isAgentComplete && idx === currentStepIndex && (
-              <ClientResponse response={step.clientResponse} />
-            )}
-            
-            {step.visualContent && (isAgentComplete || !step.agentAction) && idx === currentStepIndex && (
-              <VisualContent content={step.visualContent} />
-            )}
-            
-            {idx < currentStepIndex && (
-              <>
-                {step.agentAction && (
-                  <div className="mb-8">
+            {/* Agent thinking - show animation for current step, completed content for past steps */}
+            {step.agentAction && (
+              <div className="mb-8">
+                {/* Current step that's not completed shows thinking animation */}
+                {(idx === currentStepIndex && !completedAgents.includes(step.id)) ? (
+                  <AgentThinking 
+                    agent={step.agentAction} 
+                    onComplete={handleAgentComplete}
+                  />
+                ) : (
+                  /* Show completed content for past steps or completed current step */
+                  <>
                     <div className="flex items-start gap-3 mb-4">
-                      <Avatar className="size-12 border-2 border-blue-500">
-                        <AvatarImage src={step.agentAction.avatar} alt={step.agentAction.role} />
-                        <AvatarFallback>{step.agentAction.role.substring(0, 2)}</AvatarFallback>
-                      </Avatar>
+                      <EnhancedAvatar 
+                        src={step.agentAction.avatar} 
+                        alt={step.agentAction.role}
+                        className="size-12 border-2 border-blue-500"
+                      />
                       <div>
                         <h3 className="font-semibold text-lg">{step.agentAction.role}</h3>
                         <div className="flex gap-2">
@@ -385,81 +478,106 @@ const ClientScenarioView = ({ clientId }: { clientId: string }) => {
                       </div>
                     </div>
                     
-                    <Card className="ml-12 mb-4 border-l-4 border-l-blue-500">
-                      <CardContent className="pt-4 text-sm">
-                        {step.agentAction.finalContent}
+                    <Card className="ml-12 mb-4 border-l-4 border-l-blue-500 py-0">
+                      <CardContent className="text-sm">
+                        {idx === currentStepIndex && completedAgents.includes(step.id) ? (
+                          <StreamingText text={step.agentAction.finalContent} speed={10} />
+                        ) : (
+                          step.agentAction.finalContent
+                        )}
                       </CardContent>
                     </Card>
                     
                     <div className="ml-12 flex justify-end">
                       <Badge className="bg-green-100 text-green-800">Task Complete</Badge>
                     </div>
-                  </div>
+                  </>
                 )}
-                
-                {step.clientResponse && (
-                  <div className="mb-8">
-                    <div className="flex items-start gap-3 mb-4 justify-end">
-                      <div className="text-right">
-                        <h3 className="font-semibold text-lg">Simeon Wansi</h3>
-                        <div className="flex gap-2 justify-end">
-                          <Badge variant="outline" className="bg-gray-50">CTO, Dubai Technologies LLC</Badge>
-                        </div>
-                      </div>
-                      <Avatar className="size-12 border-2 border-gray-300">
-                        <AvatarImage src="/avatars/simeon_wansi.png" alt="Simeon Wansi" />
-                        <AvatarFallback>SW</AvatarFallback>
-                      </Avatar>
-                    </div>
-                    
-                    <Card className="mr-12 mb-4 border-r-4 border-r-gray-400 bg-gray-50">
-                      <CardContent className="pt-4 text-sm">
-                        {step.clientResponse.content}
-                        
-                        {step.clientResponse.interestPoints && step.clientResponse.interestPoints.length > 0 && (
-                          <div className="mt-4 pt-4 border-t border-gray-200">
-                            <h4 className="text-sm font-medium mb-2">Key Interest Points:</h4>
-                            <div className="flex flex-wrap gap-2">
-                              {step.clientResponse.interestPoints.map((point, index) => (
-                                <Badge key={index} variant="outline" className="bg-amber-50">{point}</Badge>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </CardContent>
-                    </Card>
-                  </div>
-                )}
-                
-                {step.visualContent && (
-                  <div className="my-12 max-w-2xl mx-auto">
-                    <Card className="overflow-hidden">
-                      <div className="bg-gradient-to-r from-blue-600 to-violet-600 text-white p-4">
-                        <h3 className="font-medium">
-                          {step.visualContent.type.charAt(0).toUpperCase() + step.visualContent.type.slice(1)} Visualization
-                        </h3>
-                      </div>
-                      
-                      {step.visualContent.image && (
-                        <div className="p-4 flex justify-center">
-                          <img 
-                            src={step.visualContent.image} 
-                            alt={step.visualContent.type} 
-                            className="max-h-64 object-contain rounded-md"
-                          />
-                        </div>
-                      )}
-                      
-                      <CardContent className="bg-gray-50 whitespace-pre-line text-sm">
-                        {step.visualContent.content}
-                      </CardContent>
-                    </Card>
-                  </div>
-                )}
-              </>
+              </div>
             )}
             
-            {idx < scenarioSteps.length - 1 && idx < currentStepIndex && (
+            {/* Client responses - only show if current step is complete or for past steps */}
+            {step.clientResponse && (
+              (idx < currentStepIndex || (idx === currentStepIndex && isAgentComplete)) && (
+                <div className="mb-8">
+                  <div className="flex items-start gap-3 mb-4 justify-end">
+                    <div className="text-right">
+                      <h3 className="font-semibold text-lg">Simeon Wansi</h3>
+                      <div className="flex gap-2 justify-end">
+                        <Badge variant="outline" className="bg-gray-50">CTO, Dubai Technologies LLC</Badge>
+                      </div>
+                    </div>
+                    <EnhancedAvatar 
+                      src="/avatars/simeon_wansi.png" 
+                      alt="Simeon Wansi"
+                      className="size-12 border-2 border-gray-300"
+                    />
+                  </div>
+                  
+                  <Card className="mr-12 mb-4 border-r-4 border-r-gray-400 bg-gray-50 py-0">
+                    <CardContent className="text-sm">
+                      {idx === currentStepIndex ? (
+                        <StreamingText text={step.clientResponse.content} speed={10} />
+                      ) : (
+                        step.clientResponse.content
+                      )}
+                      
+                      {step.clientResponse.interestPoints && step.clientResponse.interestPoints.length > 0 && (
+                        <div className="mt-4 pt-4 border-t border-gray-200">
+                          <h4 className="text-sm font-medium mb-2">Key Interest Points:</h4>
+                          <div className="flex flex-wrap gap-2">
+                            {step.clientResponse.interestPoints.map((point, index) => (
+                              <Badge key={index} variant="outline" className="bg-amber-50">{point}</Badge>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </div>
+              )
+            )}
+            
+            {/* Visual content - only show if current step is complete or has no agent, or for past steps */}
+            {step.visualContent && (
+              (idx < currentStepIndex || 
+              (idx === currentStepIndex && (isAgentComplete || !step.agentAction))) && (
+                <div className="my-12 max-w-2xl mx-auto">
+                  <Card className="overflow-hidden py-0">
+                    <div className="bg-gradient-to-r from-blue-600 to-violet-600 text-white p-4">
+                      <h3 className="font-medium">
+                        {step.visualContent.type.charAt(0).toUpperCase() + step.visualContent.type.slice(1)} Visualization
+                      </h3>
+                    </div>
+                    
+                    {step.visualContent.image && (
+                      <div className="p-4 flex justify-center">
+                        <img 
+                          src={step.visualContent.image} 
+                          alt={step.visualContent.type}
+                          loading="lazy" 
+                          className="max-h-64 object-contain rounded-md"
+                          onError={(e) => {
+                            // Fallback behavior
+                            e.currentTarget.style.display = 'none';
+                          }}
+                        />
+                      </div>
+                    )}
+                    
+                    <CardContent className="bg-gray-50 whitespace-pre-line text-sm">
+                      {idx === currentStepIndex ? (
+                        <StreamingText text={step.visualContent.content} speed={8} />
+                      ) : (
+                        step.visualContent.content
+                      )}
+                    </CardContent>
+                  </Card>
+                </div>
+              )
+            )}
+            
+            {idx < scenarioSteps.length - 1 && (
               <div className="my-8 border-b border-gray-200"></div>
             )}
           </div>
@@ -488,6 +606,7 @@ const ClientScenarioView = ({ clientId }: { clientId: string }) => {
         )}
       </div>
     </div>
+    </ErrorBoundary>
   );
 };
 

@@ -98,29 +98,31 @@ const ClientDirectoryView = () => {
             transition={{ type: 'spring', stiffness: 300 }}
           >
             <Card 
-              className="flex flex-col items-center p-6 cursor-pointer border-2 border-emerald-500 bg-gradient-to-b from-emerald-50 to-white relative"
+              className="flex flex-col items-center cursor-pointer border-2 border-emerald-500 bg-gradient-to-b from-emerald-50 to-white relative"
               onClick={() => handleClientClick(featuredClient.id)}
             >
               <Badge variant="default" className="absolute top-4 right-4 bg-emerald-500">Featured</Badge>
 
-              <div className="relative mb-4">
-                <Avatar className="size-32 border-4 border-emerald-500">
-                  <AvatarImage src={featuredClient.avatarSrc} alt={featuredClient.name} />
-                  <AvatarFallback>{featuredClient.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                </Avatar>
-                <div className="absolute -bottom-2 -right-2 size-8 rounded-full flex items-center justify-center text-white text-xs font-bold border-2 border-white bg-emerald-500">
-                  {featuredClient.potentialScore}
+              <CardContent className="flex flex-col items-center">
+                <div className="relative mb-4">
+                  <Avatar className="size-32 border-4 border-emerald-500">
+                    <AvatarImage src={featuredClient.avatarSrc} alt={featuredClient.name} />
+                    <AvatarFallback>{featuredClient.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                  </Avatar>
+                  <div className="absolute -bottom-2 -right-2 size-8 rounded-full flex items-center justify-center text-white text-xs font-bold border-2 border-white bg-emerald-500">
+                    {featuredClient.potentialScore}
+                  </div>
                 </div>
-              </div>
-              <div className="text-center">
-                <h3 className="text-xl font-bold">{featuredClient.name}</h3>
-                <p className="text-gray-500">{featuredClient.position}</p>
-                <p className="text-gray-500">{featuredClient.company}</p>
-                <div className="mt-4">
-                  <Badge variant="outline" className="mr-2">{featuredClient.industry}</Badge>
-                  <Badge variant="outline">{featuredClient.location}</Badge>
+                <div className="text-center">
+                  <h3 className="text-xl font-bold">{featuredClient.name}</h3>
+                  <p className="text-gray-500">{featuredClient.position}</p>
+                  <p className="text-gray-500">{featuredClient.company}</p>
+                  <div className="mt-4">
+                    <Badge variant="outline" className="mr-2">{featuredClient.industry}</Badge>
+                    <Badge variant="outline">{featuredClient.location}</Badge>
+                  </div>
                 </div>
-              </div>
+              </CardContent>
             </Card>
 
             {/* Thinking animation overlay */}
@@ -144,11 +146,11 @@ const ClientDirectoryView = () => {
       )}
 
       {/* Concentric circles of clients */}
-      <div className="relative w-full max-w-4xl aspect-square flex items-center justify-center mb-12">
+      <div className="relative w-full max-w-4xl aspect-square flex items-center justify-center mb-12 mx-auto">
         {/* Outer circle guidelines (visual only) */}
-        <div className="absolute rounded-full border-2 border-gray-100 size-[95%]"></div>
-        <div className="absolute rounded-full border-2 border-gray-100 size-[70%]"></div>
-        <div className="absolute rounded-full border-2 border-gray-100 size-[45%]"></div>
+        <div className="absolute inset-0 m-auto rounded-full border-2 border-gray-100 size-[95%]"></div>
+        <div className="absolute inset-0 m-auto rounded-full border-2 border-gray-100 size-[70%]"></div>
+        <div className="absolute inset-0 m-auto rounded-full border-2 border-gray-100 size-[45%]"></div>
 
         {/* Map clients by their circles */}
         {[0, 1, 2].map((circle) => (

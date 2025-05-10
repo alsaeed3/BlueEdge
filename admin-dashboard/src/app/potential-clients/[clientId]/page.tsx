@@ -3,13 +3,23 @@ import ClientScenarioView from '@/components/potential-clients/client-scenario-v
 import DashboardLayout from '@/components/layout/dashboard-layout';
 import { potentialClients } from '@/lib/potential-clients-data';
 
-export default function ClientScenarioPage({ params }: { params: { clientId: string } }) {
-  const { clientId } = params;
+interface ClientScenarioPageProps {
+  params: {
+    clientId: string
+  }
+}
+
+export default async function ClientScenarioPage({ params }: ClientScenarioPageProps) {
+  // In Next.js App Router, we need to properly handle params
+  const clientId = params?.clientId;
+  
+  // Wait for any promises to resolve (if any)
+  await Promise.resolve();
   
   // Check if client exists
-  const clientExists = potentialClients.some(client => client.id === clientId);
+  const client = potentialClients.find(client => client.id === clientId);
   
-  if (!clientExists) {
+  if (!client) {
     notFound();
   }
   
