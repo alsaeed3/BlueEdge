@@ -16,8 +16,10 @@ interface ToolCall {
 interface SceneProps {
   toolCall: ToolCall;
   isAISpeaking: boolean;
+  audioLevel?: number;
 }
-export default function AiSection({ toolCall, isAISpeaking }: SceneProps) {
+
+export default function AiSection({ toolCall, isAISpeaking, audioLevel = 0 }: SceneProps) {
   const [displayComponent, setDisplayComponent] = useState('')
   const [mapLocation, setMapLocation] = useState("25.0657001,55.2566907") // Default location coordinates
   const [pointsData, setPointsData] = useState({
@@ -115,8 +117,8 @@ export default function AiSection({ toolCall, isAISpeaking }: SceneProps) {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen w-full">
-      <div className="absolute inset-x-0 top-50 flex justify-center mt-4">
-        <WaveAvatar isAIActive={isAISpeaking}/>
+      <div className="absolute inset-x-0 top-24 flex justify-center">
+        <WaveAvatar isAIActive={isAISpeaking} audioLevel={audioLevel}/>
       </div>
       <AnimatePresence mode="wait">
         {displayComponent === 'map' && (

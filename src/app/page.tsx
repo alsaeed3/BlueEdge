@@ -338,14 +338,26 @@ export default function App() {
   };
 
   return (
-    <div className="relative size-full bg-gray-300 h-screen overflow-hidden">
+    <div 
+      className="relative size-full h-screen overflow-hidden"
+      style={{
+        backgroundImage: 'url("/bg.jpg")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}
+    >
       <AppBar 
         handleConnectClick={handleConnectClick} 
         isSessionActive={isSessionActive} 
       />
       
       {isSessionActive && (
-        <AiSection toolCall={toolCall} isAISpeaking={isAISpeaking}/>
+        <AiSection 
+          toolCall={toolCall} 
+          isAISpeaking={isAISpeaking}
+          audioLevel={audioLevel}
+        />
       )}
     </div>
   );
