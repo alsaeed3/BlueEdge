@@ -197,9 +197,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ---
 
-*This documentation is current as of May 2023*
-
-
----
-
 *This documentation is current as of May 11, 2025*
