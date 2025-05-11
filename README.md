@@ -180,11 +180,11 @@ The AI behavior can be modified by updating the instructions and available tools
 Team: BlueEdge
 
 Members:
-    Ali Saeed
-    Ahmed Salem
-    Aarif
-    Mohammed Khedr
-    Simon
+   - Ali Saeed
+   - Ahmed Salem
+   - Aarif
+   - Mohammed Khedr
+   - Simon
 
 
 Contributions are welcome! Please feel free to submit a Pull Request.
