@@ -117,7 +117,7 @@ export default function AiSection({ toolCall, isAISpeaking, audioLevel = 0 }: Sc
 
   return (
     <div className="flex flex-col items-center justify-center h-screen w-full">
-      <div className="absolute inset-x-0 top-24 flex justify-center">
+      <div className="absolute inset-x-0 top-1/2 flex justify-center transform -translate-y-1/2">
         <WaveAvatar isAIActive={isAISpeaking} audioLevel={audioLevel}/>
       </div>
       <AnimatePresence mode="wait">
