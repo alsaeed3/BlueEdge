@@ -184,7 +184,7 @@ Members:
    - Ahmed Salem
    - Aarif
    - Mohammed Khedr
-   - Simon
+   - Simeon
 
 
 Contributions are welcome! Please feel free to submit a Pull Request.
