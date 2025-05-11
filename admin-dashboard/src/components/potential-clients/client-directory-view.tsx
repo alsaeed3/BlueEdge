@@ -16,11 +16,10 @@ const ClientDirectoryView = () => {
   const router = useRouter();
   const [loading, setLoading] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
-  const [activeTab, setActiveTab] = useState<string>("industry");
+  const [activeTab, setActiveTab] = useState<string>("segmentation");
 
-  // Filter out featured client for special display
-  const featuredClient = potentialClients.find(client => client.isFeatured);
-  const regularClients = potentialClients.filter(client => !client.isFeatured);
+  // All clients for display
+  const allClients = potentialClients;
 
   // Function to get priority level based on score
   const getPriorityLevel = (score: number) => {
@@ -31,7 +30,7 @@ const ClientDirectoryView = () => {
   
   // Group clients by industry
   const clientsByIndustry = useMemo(() => {
-    return regularClients.reduce<{ [key: string]: typeof regularClients }>(
+    return allClients.reduce<{ [key: string]: typeof allClients }>(
       (acc, client) => {
         if (!acc[client.industry]) acc[client.industry] = [];
         acc[client.industry].push(client);
@@ -39,11 +38,11 @@ const ClientDirectoryView = () => {
       },
       {}
     );
-  }, [regularClients]);
+  }, [allClients]);
 
   // Group clients by location
   const clientsByLocation = useMemo(() => {
-    return regularClients.reduce<{ [key: string]: typeof regularClients }>(
+    return allClients.reduce<{ [key: string]: typeof allClients }>(
       (acc, client) => {
         if (!acc[client.location]) acc[client.location] = [];
         acc[client.location].push(client);
@@ -51,11 +50,11 @@ const ClientDirectoryView = () => {
       },
       {}
     );
-  }, [regularClients]);
+  }, [allClients]);
   
   // Group clients by priority level
   const clientsByPriority = useMemo(() => {
-    return regularClients.reduce<{ [key: string]: typeof regularClients }>(
+    return allClients.reduce<{ [key: string]: typeof allClients }>(
       (acc, client) => {
         const priority = getPriorityLevel(client.potentialScore);
         if (!acc[priority]) acc[priority] = [];
@@ -64,7 +63,74 @@ const ClientDirectoryView = () => {
       },
       {}
     );
-  }, [regularClients]);
+  }, [allClients]);
+  
+  // Group clients by segmentation (for tier chart)
+  const clientsBySegment = useMemo(() => {
+    // Tier 1: Simeon plus 4 more high-potential clients (reduced from 6)
+    // Tier 2: Medium priority clients with good potential + duplicated clients to double size
+    // Tier 3: Standard priority clients + duplicated clients to double size
+    
+    // Ensure Simeon is in Tier 1
+    const simeonClient = allClients.find(client => client.id === 'simeon-wansi');
+    
+    // Get top clients by potential score (excluding Simeon) - REDUCED TO 4 (from 6)
+    const otherHighValueClients = allClients
+      .filter(client => client.id !== 'simeon-wansi')
+      .sort((a, b) => b.potentialScore - a.potentialScore)
+      .slice(0, 4);
+    
+    // Create Tier 1 with Simeon and 4 other clients
+    const tier1 = simeonClient ? [simeonClient, ...otherHighValueClients] : otherHighValueClients;
+    
+    // Rest of clients for Tier 2 and 3
+    const remainingClients = allClients.filter(
+      client => !tier1.some(t1Client => t1Client.id === client.id)
+    );
+    
+    // Get clients for tier 2 based on score
+    const originalTier2 = remainingClients.filter(client => client.potentialScore >= 75);
+    const tier3Clients = remainingClients.filter(client => client.potentialScore < 75);
+    
+    // ENHANCED DUPLICATION: Create duplicates to double the size of Tier 2
+    
+    // First round of duplicates: tier 1 clients (except Simeon)
+    const tier1DuplicatesForTier2 = tier1
+      .filter(client => client.id !== 'simeon-wansi')
+      .map(client => ({...client, id: `${client.id}-duplicate-t2-1`}));
+      
+    // Second round of duplicates: original tier 2 clients 
+    const tier2DuplicatesForTier2 = originalTier2
+      .map(client => ({...client, id: `${client.id}-duplicate-t2-2`}));
+    
+    // Third round of duplicates: some tier 3 clients
+    const tier3DuplicatesForTier2 = tier3Clients
+      .slice(0, originalTier2.length)
+      .map(client => ({...client, id: `${client.id}-duplicate-t2-3`}));
+    
+    // Combine original tier 2 with duplicates to double the size
+    const tier2 = [
+      ...originalTier2, 
+      ...tier1DuplicatesForTier2,
+      ...tier2DuplicatesForTier2,
+      ...tier3DuplicatesForTier2
+    ];
+    
+    // Create duplicates to double the size of Tier 3
+    const tier3Duplicates = tier3Clients.map(client => ({
+      ...client, 
+      id: `${client.id}-duplicate-t3`
+    }));
+    
+    // Double the size of Tier 3
+    const expandedTier3 = [...tier3Clients, ...tier3Duplicates];
+    
+    return {
+      "Tier 1": tier1,
+      "Tier 2": tier2,
+      "Tier 3": expandedTier3
+    };
+  }, [allClients]);
 
   // Transition to client scenario
   const handleClientClick = (clientId: string) => {
@@ -118,14 +184,14 @@ const ClientDirectoryView = () => {
   const industryCount = Object.keys(clientsByIndustry).length;
   const locationCount = Object.keys(clientsByLocation).length;
   const highPriorityCount = (clientsByPriority['High'] || []).length;
-  const totalClients = regularClients.length + (featuredClient ? 1 : 0);
+  const totalClients = allClients.length;
 
   return (
     <div className="container flex flex-col items-center mx-auto">
-      <h1 className="text-3xl font-bold mb-2">Customer Data Segmentation</h1>
+      <h1 className="text-3xl font-bold mb-2">Customer Tiering</h1>
       <p className="text-gray-500 mb-8 text-center max-w-2xl">
-        Explore our potential customer base through different segmentation approaches. 
-        Analyze by industry, location, or priority level to identify key target segments.
+        Explore our potential customer base through our three-tier prioritization system.
+        Visualize customers by different dimensions to identify key target clients.
       </p>
 
       {/* Stats summary */}
@@ -156,103 +222,192 @@ const ClientDirectoryView = () => {
         </Card>
       </div>
 
-      {/* Featured client section */}
-      {featuredClient && (
-        <div className="mb-8 w-full">
-          <h2 className="text-xl font-semibold mb-4">Featured Client</h2>
-          <motion.div
-            className="relative"
-            whileHover={{ scale: 1.02 }}
-            transition={{ type: 'spring', stiffness: 300 }}
-          >
-            <Card 
-              className="flex flex-col items-center cursor-pointer border-2 border-emerald-500 bg-gradient-to-b from-emerald-50 to-white relative"
-              onClick={() => handleClientClick(featuredClient.id)}
-            >
-              <Badge variant="default" className="absolute top-4 right-4 bg-emerald-500">Featured</Badge>
-
-              <CardContent className="flex flex-col sm:flex-row items-center gap-6 py-6">
-                <div className="relative">
-                  <Avatar className="size-32 border-4 border-emerald-500">
-                    <AvatarImage src={featuredClient.avatarSrc} alt={featuredClient.name} />
-                    <AvatarFallback>{featuredClient.name.split(' ').map((n: string) => n[0]).join('')}</AvatarFallback>
-                  </Avatar>
-                  <div className="absolute -bottom-2 -right-2 size-8 rounded-full flex items-center justify-center text-white text-xs font-bold border-2 border-white bg-emerald-500">
-                    {featuredClient.potentialScore}
-                  </div>
-                </div>
-
-                <div>
-                  <h3 className="text-xl font-bold">{featuredClient.name}</h3>
-                  <p className="text-gray-500">{featuredClient.position}</p>
-                  <p className="text-gray-500">{featuredClient.company}</p>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    <Badge variant="outline" className="mr-2">{featuredClient.industry}</Badge>
-                    <Badge variant="outline">{featuredClient.location}</Badge>
-                    <Badge className={getPriorityBadgeColor(featuredClient.potentialScore)}>
-                      {getPriorityText(featuredClient.potentialScore)}
-                    </Badge>
-                  </div>
-                </div>
-
-                <div className="ml-auto bg-emerald-50 p-4 rounded-lg hidden md:block">
-                  <p className="text-sm text-gray-600 mb-2">Client Profile Highlights:</p>
-                  <ul className="text-sm space-y-1">
-                    <li className="flex items-center gap-1">
-                      <span className="inline-block size-1.5 rounded-full bg-emerald-500"></span>
-                      Recent appointment as CTO at Dubai Technologies
-                    </li>
-                    <li className="flex items-center gap-1">
-                      <span className="inline-block size-1.5 rounded-full bg-emerald-500"></span>
-                      New to UAE, seeking permanent residence
-                    </li>
-                    <li className="flex items-center gap-1">
-                      <span className="inline-block size-1.5 rounded-full bg-emerald-500"></span>
-                      High potential value across all business units
-                    </li>
-                  </ul>
-                </div>
-              </CardContent>
-              
-              <div className="w-full bg-green-100 p-3 border-t border-green-200 text-center text-green-800 font-medium">
-                Click to view detailed client journey scenario
-              </div>
-            </Card>
-
-            {/* Thinking animation overlay */}
-            {loading === featuredClient.id && (
-              <motion.div 
-                className="absolute inset-0 bg-black/70 rounded-lg flex flex-col items-center justify-center"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-              >
-                <Spinner size="lg" className="text-emerald-500 mb-4" />
-                <h3 className="text-xl font-semibold text-white mb-2">Thinking<span className="animate-pulse">...</span></h3>
-                <p className="text-gray-300 text-sm mb-4">Analyzing client data and scenario options</p>
-                <div className="w-64 mb-2">
-                  <Progress value={progress} className="h-2" />
-                </div>
-                <p className="text-xs text-gray-400">{progress}% complete</p>
-              </motion.div>
-            )}
-          </motion.div>
-        </div>
-      )}
-
       {/* Segmentation tabs */}
       <div className="w-full">
         <Tabs 
-          defaultValue="industry" 
+          defaultValue="segmentation" 
           value={activeTab} 
           onValueChange={setActiveTab}
           className="w-full"
         >
-          <TabsList className="grid w-full grid-cols-3 mb-8">
+          <TabsList className="grid w-full grid-cols-4 mb-8">
+            <TabsTrigger value="segmentation">Customer Tiers</TabsTrigger>
             <TabsTrigger value="industry">By Industry</TabsTrigger>
             <TabsTrigger value="location">By Location</TabsTrigger>
             <TabsTrigger value="priority">By Priority</TabsTrigger>
           </TabsList>
 
+          {/* Customer Segmentation - Tiers Chart */}
+          <TabsContent value="segmentation" className="w-full">
+            <h2 className="text-xl font-semibold mb-4">Customer Tiering Analysis</h2>
+            <div className="mb-4 grid grid-cols-3 gap-4">
+              <div className="p-3 bg-emerald-50 rounded-lg border border-emerald-200">
+                <h3 className="font-medium text-emerald-800">Tier 1: High Priority</h3>
+                <p className="text-sm text-gray-600">Top-tier potential clients with highest value potential or strategic importance, scoring 90-100.</p>
+              </div>
+              <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
+                <h3 className="font-medium text-blue-800">Tier 2: Medium Priority</h3>
+                <p className="text-sm text-gray-600">Important potential clients with good revenue potential, scoring 75-89.</p>
+              </div>
+              <div className="p-3 bg-violet-50 rounded-lg border border-violet-200">
+                <h3 className="font-medium text-violet-800">Tier 3: Standard Priority</h3>
+                <p className="text-sm text-gray-600">Regular potential clients that require standard engagement approach, scoring below 75.</p>
+              </div>
+            </div>
+            <div className="relative w-full h-[600px] border border-gray-200 rounded-lg bg-gradient-to-b from-teal-900/90 to-indigo-900/90 mb-8">
+              {/* Chart axes labels */}
+              <div className="absolute left-6 top-1/2 -translate-y-1/2 -rotate-90 text-white font-medium">
+                Business Value
+              </div>
+              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-white font-medium">
+                Client Tiers
+              </div>
+              
+              {/* Tier layout - vertical sections */}
+              <div className="absolute inset-0 flex flex-col items-center">
+                {/* Tier 1 - Top */}
+                <div className="w-full flex-1 flex items-center justify-center border-b border-white/20">
+                  <div className="text-center">
+                    <div className="text-white mb-2 bg-emerald-600 inline-block px-3 py-1 rounded-md">
+                      Tier 1: High Priority
+                    </div>
+                    <div className="flex flex-wrap justify-center gap-2">
+                      {clientsBySegment["Tier 1"].map((client) => (
+                        <TooltipProvider key={client.id}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div 
+                                className="relative cursor-pointer"
+                                onClick={() => handleClientClick(client.id)}
+                              >
+                                <Avatar className={`border-2 size-12 ${
+                                  client.id === 'simeon-wansi' 
+                                    ? 'border-4 border-emerald-400 ring-2 ring-emerald-300' 
+                                    : 'border-emerald-400'
+                                } bg-white`}>
+                                  <AvatarImage src={client.avatarSrc} alt={client.name} />
+                                  <AvatarFallback>{client.name.split(' ').map((n: string) => n[0]).join('')}</AvatarFallback>
+                                </Avatar>
+                                <div className="absolute -bottom-1 -right-1 size-5 rounded-full flex items-center justify-center text-white text-[10px] font-bold border-2 border-white bg-gray-800">
+                                  {client.potentialScore}
+                                </div>
+                                {client.id === 'simeon-wansi' && (
+                                  <div className="absolute -top-2 -right-2 size-6 flex items-center justify-center text-white text-xs font-bold rounded-full bg-emerald-500 border-2 border-white">
+                                    ★
+                                  </div>
+                                )}
+                              </div>
+                            </TooltipTrigger>
+                            <TooltipContent side="bottom">
+                              <div className="flex flex-col">
+                                <span className="font-bold">{client.name}</span>
+                                <span>{client.position}</span>
+                                <span>{client.company}</span>
+                                <div className="flex gap-1 mt-1">
+                                  <Badge variant="outline" className="text-xs">{client.industry}</Badge>
+                                  <Badge variant="outline" className="text-xs">{client.location}</Badge>
+                                </div>
+                                {client.id === 'simeon-wansi' && (
+                                  <Badge className="mt-1.5 bg-emerald-100 text-emerald-800 hover:bg-emerald-200">
+                                    Click to view detailed scenario
+                                  </Badge>
+                                )}
+                              </div>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Tier 2 - Middle */}
+                <div className="w-full flex-1 flex items-center justify-center border-b border-white/20">
+                  <div className="text-center">
+                    <div className="text-white mb-2 bg-blue-600 inline-block px-3 py-1 rounded-md">
+                      Tier 2: Medium Priority
+                    </div>
+                    <div className="flex flex-wrap justify-center gap-2">
+                      {clientsBySegment["Tier 2"].map((client) => (
+                        <TooltipProvider key={client.id}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div 
+                                className="relative cursor-pointer"
+                                onClick={() => handleClientClick(client.id)}
+                              >
+                                <Avatar className="border-2 border-blue-400 size-12 bg-white">
+                                  <AvatarImage src={client.avatarSrc} alt={client.name} />
+                                  <AvatarFallback>{client.name.split(' ').map((n: string) => n[0]).join('')}</AvatarFallback>
+                                </Avatar>
+                                <div className="absolute -bottom-1 -right-1 size-5 rounded-full flex items-center justify-center text-white text-[10px] font-bold border-2 border-white bg-gray-800">
+                                  {client.potentialScore}
+                                </div>
+                              </div>
+                            </TooltipTrigger>
+                            <TooltipContent side="bottom">
+                              <div className="flex flex-col">
+                                <span className="font-bold">{client.name}</span>
+                                <span>{client.position}</span>
+                                <span>{client.company}</span>
+                                <div className="flex gap-1 mt-1">
+                                  <Badge variant="outline" className="text-xs">{client.industry}</Badge>
+                                  <Badge variant="outline" className="text-xs">{client.location}</Badge>
+                                </div>
+                              </div>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Tier 3 - Bottom */}
+                <div className="w-full flex-1 flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="text-white mb-2 bg-violet-600 inline-block px-3 py-1 rounded-md">
+                      Tier 3: Standard Priority
+                    </div>
+                    <div className="flex flex-wrap justify-center gap-2">
+                      {clientsBySegment["Tier 3"].map((client) => (
+                        <TooltipProvider key={client.id}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div 
+                                className="relative cursor-pointer"
+                                onClick={() => handleClientClick(client.id)}
+                              >
+                                <Avatar className="border-2 border-violet-400 size-12 bg-white">
+                                  <AvatarImage src={client.avatarSrc} alt={client.name} />
+                                  <AvatarFallback>{client.name.split(' ').map((n: string) => n[0]).join('')}</AvatarFallback>
+                                </Avatar>
+                                <div className="absolute -bottom-1 -right-1 size-5 rounded-full flex items-center justify-center text-white text-[10px] font-bold border-2 border-white bg-gray-800">
+                                  {client.potentialScore}
+                                </div>
+                              </div>
+                            </TooltipTrigger>
+                            <TooltipContent side="bottom">
+                              <div className="flex flex-col">
+                                <span className="font-bold">{client.name}</span>
+                                <span>{client.position}</span>
+                                <span>{client.company}</span>
+                                <div className="flex gap-1 mt-1">
+                                  <Badge variant="outline" className="text-xs">{client.industry}</Badge>
+                                  <Badge variant="outline" className="text-xs">{client.location}</Badge>
+                                </div>
+                              </div>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+          
           {/* Industry segmentation */}
           <TabsContent value="industry" className="w-full">
             <h2 className="text-xl font-semibold mb-4">Industry Segmentation</h2>
@@ -410,26 +565,6 @@ const ClientDirectoryView = () => {
             </div>
           </TabsContent>
         </Tabs>
-      </div>
-
-      {/* Legend */}
-      <div className="flex flex-wrap gap-6 justify-center mt-4">
-        <div className="flex items-center gap-2">
-          <div className="size-4 rounded-full bg-emerald-500"></div>
-          <span className="text-sm">High Priority (85-100)</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="size-4 rounded-full bg-blue-500"></div>
-          <span className="text-sm">Medium Priority (75-84)</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="size-4 rounded-full bg-violet-500"></div>
-          <span className="text-sm">Standard Priority (65-74)</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="size-5 font-bold text-xs flex items-center justify-center text-white bg-gray-800 rounded-full">95</div>
-          <span className="text-sm">Client Score</span>
-        </div>
       </div>
     </div>
   );
