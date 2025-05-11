@@ -28,7 +28,7 @@ export default function Home() {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-neutral-900 to-neutral-800 text-white p-6">
       <main className="max-w-4xl w-full flex flex-col items-center text-center">
         <div className="mb-12">
-          <h1 className="text-5xl font-bold mb-4">Gargash Group</h1>
+          <h1 className="text-5xl font-bold mb-4">Scoutly Group</h1>
           <p className="text-xl text-neutral-300">
             Real Estate Admin Dashboard
           </p>
@@ -102,7 +102,7 @@ export default function Home() {
       </main>
 
       <footer className="mt-auto pt-12 pb-6 text-sm text-neutral-400">
-        <p>© 2025 Gargash Group. All rights reserved.</p>
+        <p>© 2025 Scoutly Group. All rights reserved.</p>
       </footer>
     </div>
   );

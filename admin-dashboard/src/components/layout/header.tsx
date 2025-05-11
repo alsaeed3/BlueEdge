@@ -99,7 +99,7 @@ export function Header() {
                 </Avatar>
                 <div className="hidden md:flex md:flex-col md:items-start">
                   <p className="text-sm font-medium">Admin User</p>
-                  <p className="text-xs text-neutral-500">admin@gargash.com</p>
+                  <p className="text-xs text-neutral-500">admin@Scoutly.com</p>
                 </div>
               </Button>
             </DropdownMenuTrigger>

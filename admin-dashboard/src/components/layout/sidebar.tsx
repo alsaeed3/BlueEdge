@@ -81,7 +81,7 @@ export function Sidebar() {
             <h1 className="text-2xl font-bold">G</h1>
           </div>
           <h1 className="text-2xl font-bold">
-            Gargash Admin
+            Scoutly Admin
           </h1>
         </Link>
         <div className="space-y-1">
