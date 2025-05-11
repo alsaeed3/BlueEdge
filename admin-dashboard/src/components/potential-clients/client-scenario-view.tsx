@@ -57,21 +57,22 @@ const AgentThinking = ({ agent, onComplete }: AgentThinkingProps) => {
       console.log(`Agent ${agent.role} - Action phase`);
       setPhase("action");
       
-      // Simulate action phase timing
+      // Simulate action phase timing with 1 second extra delay
       phaseTimers.current.action = setTimeout(() => {
         console.log(`Agent ${agent.role} - Execution phase`);
         setPhase("execution");
         
         // Add a delay after showing the execution content before marking as complete
+        // with 1 second extra delay before final execution completes
         phaseTimers.current.completion = setTimeout(() => {
           console.log(`Agent ${agent.role} - Complete`);
           setIsComplete(true);
           
           // Notify parent component that agent is complete
           onComplete();
-        }, 3000); // Wait 3 seconds after showing content before advancing
-      }, 3000); // 3 seconds for action phase
-    }, 4000); // 4 seconds for thinking phase (slightly shorter for better UX)
+        }, 4000); // Wait 4 seconds after showing content before advancing (3s original + 1s extra)
+      }, 4000); // 4 seconds for action phase (3s original + 1s extra)
+    }, 5000); // 5 seconds for thinking phase (4s original + 1s extra)
     
     // Cleanup timers on unmount
     return () => {
@@ -315,7 +316,7 @@ interface VisualContentProps {
 }
 
 const ClientScenarioView = ({ clientId }: { clientId: string }) => {
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [currentStepIndex, setCurrentStepIndex] = useState(-1); // Start at -1 to delay the first step
   const [completedAgents, setCompletedAgents] = useState<string[]>([]);
   const [isAgentComplete, setIsAgentComplete] = useState(false);
   const [stepsInProgress, setStepsInProgress] = useState<string[]>([]);
@@ -324,7 +325,16 @@ const ClientScenarioView = ({ clientId }: { clientId: string }) => {
 
   // Get scenario steps for the client
   const scenarioSteps = simeonWansiScenario;
-  const currentStep = scenarioSteps[currentStepIndex];
+  const currentStep = currentStepIndex >= 0 ? scenarioSteps[currentStepIndex] : null;
+  
+  // Initial 2-second delay before starting the scenario
+  useEffect(() => {
+    const initialDelay = setTimeout(() => {
+      setCurrentStepIndex(0);
+    }, 2000); // 2-second initial delay
+    
+    return () => clearTimeout(initialDelay);
+  }, []);
 
   // When a new step becomes current, add it to in-progress steps
   useEffect(() => {
