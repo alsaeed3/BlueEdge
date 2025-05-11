@@ -1,6 +1,6 @@
-# BlueEdge - Comprehensive Real Estate Platform
+# Scoutly - Comprehensive Real Estate Platform
 
-BlueEdge is a full-featured real estate platform consisting of two main components:
+Scoutly is a full-featured real estate platform consisting of two main components:
 1. An interactive AI assistant with rich visual components for client engagement
 2. A comprehensive admin dashboard for real estate professionals
 
@@ -175,7 +175,7 @@ The AI behavior can be modified by updating the instructions and available tools
 
 ## Contributing
 
-# Contributors
+### Contributors
 
 Team: BlueEdge
 
