@@ -278,29 +278,30 @@ export const simeonWansiScenario: ScenarioStep[] = [
     agentAction: {
       role: "Legal Documentation Agent",
       avatar: "/avatars/bot.png",
-      title: "Legal Contract Specialist",
-      expertise: "Real Estate Documentation",
+      title: "Lease Contract Specialist",
+      expertise: "Real Estate Leasing Documentation",
       thinkingProcess: [
-        "Retrieving UAE real estate contract templates",
-        "Checking downtown Dubai zoning regulations",
-        "Reviewing property-specific details and limitations",
-        "Customizing payment terms based on client profile",
-        "Validating all legal requirements are met",
-        "Ensuring compliance with UAE foreign ownership laws",
-        "Preparing digital signature integration"
+        "Retrieving UAE real estate leasing templates",
+        "Checking downtown Dubai zoning regulations for leased properties",
+        "Reviewing property-specific details and leasing options",
+        "Creating two distinct leasing packages with different benefits",
+        "Validating all legal requirements for property leasing in UAE",
+        "Ensuring compliance with UAE foreign residency leasing laws",
+        "Preparing digital signature integration for lease contracts"
       ],
       actions: [
-        "Generate customized sales contract",
-        "Add property-specific terms and conditions",
-        "Include smart home warranty documentation",
+        "Generate two customized leasing options",
+        "Create standard lease at 100k AED yearly paid quarterly",
+        "Create premium lease with tokenized ownership at 120k AED yearly paid quarterly",
+        "Include smart home warranty documentation for both options",
         "Prepare digital signature workflow",
         "Set up secure document delivery"
       ],
-      finalContent: "Contract generated for Downtown Dubai Smart Penthouse acquisition. All required fields populated with client and property data. Payment terms structured with 25% initial payment and 75% within 30 days. Smart home technology warranty included with 3-year comprehensive coverage. Contract ready for digital signature by both parties."
+      finalContent: "Two leasing contracts generated for Downtown Dubai Smart Penthouse. Option 1: Standard lease at 100,000 AED yearly (25,000 AED quarterly) without additional benefits. Option 2: Premium lease at 120,000 AED yearly (30,000 AED quarterly) including digital property token representing partial ownership. Both include full smart home technology warranty with 3-year comprehensive coverage. Contracts ready for digital signature, allowing client to select preferred option."
     },
     visualContent: {
       type: "document",
-      content: "REAL ESTATE PURCHASE AGREEMENT\nBETWEEN: Gargash Luxury Properties AND Simeon Wansi\nPROPERTY: Downtown Dubai Smart Penthouse, Unit 4501\nPURCHASE PRICE: AED 12,500,000\nDEPOSIT: AED 3,125,000 (25%)\nCLOSING DATE: June 15, 2025\nSMART HOME WARRANTY: 3-year comprehensive coverage\n[Document prepared for digital signature]"
+      content: "REAL ESTATE LEASING OPTIONS\nBETWEEN: Gargash Luxury Properties AND Simeon Wansi\nPROPERTY: Downtown Dubai Smart Penthouse, Unit 4501\n\nOPTION 1: STANDARD LEASE\n• Yearly Payment: AED 100,000\n• Quarterly Payment: AED 25,000\n• Contract Term: 12 months\n• Security Deposit: AED 20,000\n• No ownership rights\n• Smart Home Warranty Included\n\nOPTION 2: PREMIUM LEASE WITH TOKEN\n• Yearly Payment: AED 120,000\n• Quarterly Payment: AED 30,000\n• Contract Term: 12 months\n• Security Deposit: AED 20,000\n• Includes digital property token (partial ownership)\n• Smart Home Warranty Included\n• Priority renewal rights\n\n[Document prepared for digital signature]"
     }
   },
   {
@@ -312,25 +313,25 @@ export const simeonWansiScenario: ScenarioStep[] = [
       title: "Loyalty Program Director",
       expertise: "VIP Client Relationships",
       thinkingProcess: [
-        "Calculating purchase value for loyalty points allocation",
-        "Determining appropriate tier status for high-value real estate purchase",
+        "Calculating lease value for loyalty points allocation",
+        "Determining appropriate tier status for premium lease agreement",
         "Reviewing additional benefits appropriate for client profile",
         "Checking for potential cross-selling opportunities",
         "Preparing personalized welcome to loyalty program",
         "Evaluating early access opportunities for upcoming properties"
       ],
       actions: [
-        "Create premium tier loyalty account",
-        "Allocate 250,000 loyalty points for property purchase",
+        "Create gold tier loyalty account",
+        "Allocate 5,000 loyalty points for premium lease selection",
         "Enable VIP concierge services",
         "Activate exclusive event invitations",
         "Schedule follow-up for additional benefits explanation"
       ],
-      finalContent: "Welcome to Gargash Elite Status! Your real estate purchase has earned you our highest loyalty tier with 250,000 Gargash Points. Benefits include dedicated concierge service, priority access to new property listings, VIP event invitations, and exclusive partner benefits with luxury brands across Dubai. Your personal concierge will contact you within 24 hours to provide a complete overview of your Elite membership privileges."
+      finalContent: "Welcome to Gargash Gold Status! Your premium lease selection has earned you our gold loyalty tier with 5,000 Gargash Points. Benefits include dedicated concierge service, priority access to new property listings, VIP event invitations, and exclusive partner benefits with luxury brands across Dubai. Your personal concierge will contact you within 24 hours to provide a complete overview of your Gold membership privileges."
     },
     visualContent: {
       type: "confirmation",
-      content: "GARGASH ELITE STATUS ACHIEVED\n• 250,000 Gargash Points added to your account\n• Dedicated Lifestyle Concierge assigned: Sophia Rahman\n• Priority access to all new property releases\n• Complimentary property management for 1 year\n• VIP access to Dubai's most exclusive events\n• Luxury brand partner privileges activated"
+      content: "GARGASH GOLD STATUS ACHIEVED\n• 5,000 Gargash Points added to your account\n• Dedicated Lifestyle Concierge assigned: Sophia Rahman\n• Priority access to all new property releases\n• Complimentary property maintenance for 1 year\n• VIP access to Dubai's most exclusive events\n• Luxury brand partner privileges activated"
     }
   },
   {
