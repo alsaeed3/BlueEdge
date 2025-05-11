@@ -2,9 +2,8 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import { BASE_URL, INSTRUCTIONS, MODEL, TOOLS } from "./lib/config";
-import SessionToggleButton from "@/components/SessionToggleButton";
+import AppBar from "@/components/AppBar";
 import AiSection from "@/components/AiSection";
-import Voucher from "@/components/Voucher";
 
 type ToolCallOutput = {
   response: string;
@@ -339,8 +338,12 @@ export default function App() {
   };
 
   return (
-    <div className="relative size-full bg-gray-300">
-      <SessionToggleButton handleConnectClick={handleConnectClick} isSessionActive={isSessionActive} />
+    <div className="relative size-full bg-gray-300 h-screen overflow-hidden">
+      <AppBar 
+        handleConnectClick={handleConnectClick} 
+        isSessionActive={isSessionActive} 
+      />
+      
       {isSessionActive && (
         <AiSection toolCall={toolCall} isAISpeaking={isAISpeaking}/>
       )}
