@@ -70,9 +70,9 @@ const AgentThinking = ({ agent, onComplete }: AgentThinkingProps) => {
           
           // Notify parent component that agent is complete
           onComplete();
-        }, 4000); // Wait 4 seconds after showing content before advancing (3s original + 1s extra)
-      }, 4000); // 4 seconds for action phase (3s original + 1s extra)
-    }, 5000); // 5 seconds for thinking phase (4s original + 1s extra)
+        }, 1000); // Wait 4 seconds after showing content before advancing (3s original + 1s extra)
+      }, 3000); // 4 seconds for action phase (3s original + 1s extra)
+    }, 4000); // 5 seconds for thinking phase (4s original + 1s extra)
     
     // Cleanup timers on unmount
     return () => {
@@ -265,7 +265,7 @@ const VisualContent = ({ content }: VisualContentProps) => {
     >
       <Card className="overflow-hidden py-0">
         <div className="bg-gradient-to-r from-blue-600 to-violet-600 text-white p-4">
-          <h3 className="font-medium">{content.type.charAt(0).toUpperCase() + content.type.slice(1)} Visualization</h3>
+          <h3 className="font-medium">{content.type.charAt(0).toUpperCase() + content.type.slice(1)} Generation</h3>
         </div>
         
         {content.image && (
@@ -563,7 +563,7 @@ const ClientScenarioView = ({ clientId }: { clientId: string }) => {
                   <Card className="overflow-hidden py-0">
                     <div className="bg-gradient-to-r from-blue-600 to-violet-600 text-white p-4">
                       <h3 className="font-medium">
-                        {step.visualContent.type.charAt(0).toUpperCase() + step.visualContent.type.slice(1)} Visualization
+                        {step.visualContent.type.charAt(0).toUpperCase() + step.visualContent.type.slice(1)} Generation
                       </h3>
                     </div>
                     
