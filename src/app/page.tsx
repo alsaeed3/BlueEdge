@@ -339,9 +339,8 @@ export default function App() {
   };
 
   return (
-    <div className="relative size-full">
+    <div className="relative size-full bg-gray-300">
       <SessionToggleButton handleConnectClick={handleConnectClick} isSessionActive={isSessionActive} />
-      <AiSection toolCall={toolCall} isAISpeaking={isAISpeaking}/>
       {isSessionActive && (
         <AiSection toolCall={toolCall} isAISpeaking={isAISpeaking}/>
       )}

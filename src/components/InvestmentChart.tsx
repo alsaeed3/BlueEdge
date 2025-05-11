@@ -145,7 +145,7 @@ export default function InvestmentChart({
   };
 
   return (
-    <div className="w-full h-[350px] mx-auto">
+    <div className="w-full h-[350px] mx-auto bg-gray-800 rounded-lg shadow-lg p-4 relative">
       <Line data={lineChartData} options={lineChartOptions} />
     </div>
   );

@@ -6,6 +6,7 @@ import Voucher from "./Voucher";
 import InvestmentChart from "./InvestmentChart";
 import EmailSent from "./EmailSent";
 import PointsReward from "./PointsReward";
+import MapVideo from "./MapVideo";
 
 interface ToolCall {
   name: string;
@@ -18,6 +19,7 @@ interface SceneProps {
 }
 export default function AiSection({ toolCall, isAISpeaking }: SceneProps) {
   const [displayComponent, setDisplayComponent] = useState('')
+  const [mapLocation, setMapLocation] = useState("25.0657001,55.2566907") // Default location coordinates
   const [pointsData, setPointsData] = useState({
     initialPoints: 4900,
     earnedPoints: 100,
@@ -51,6 +53,17 @@ export default function AiSection({ toolCall, isAISpeaking }: SceneProps) {
 
     switch (name) {
       case "show_map":
+        // Extract location if provided in arguments
+        if (args.location) {
+          // If coordinates are provided directly, use them
+          if (/^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/.test(args.location)) {
+            setMapLocation(args.location);
+          } else {
+            // If it's a place name, we'll use our default coords for the demo
+            // In a real app, you would use a geocoding service here
+            setMapLocation("25.0657001,55.2566907");
+          }
+        }
         setDisplayComponent('map');
         break;
       case "do_virtual_tour":
@@ -102,7 +115,7 @@ export default function AiSection({ toolCall, isAISpeaking }: SceneProps) {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen w-full">
-      <div className="flex justify-center mt-4">
+      <div className="absolute inset-x-0 top-50 flex justify-center mt-4">
         <WaveAvatar isAIActive={isAISpeaking}/>
       </div>
       <AnimatePresence mode="wait">
@@ -115,14 +128,7 @@ export default function AiSection({ toolCall, isAISpeaking }: SceneProps) {
             transition={{ duration: 0.3 }}
             className="w-full max-w-3xl h-96 bg-gray-100 rounded-lg shadow-md overflow-hidden animate-fadeIn"
           >
-            <iframe 
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d115423.25256146063!2d55.17891808472764!3d25.17029676221948!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f43496ad9c645%3A0xbde66e5084295162!2sDubai%20-%20United%20Arab%20Emirates!5e0!3m2!1sen!2sus!4v1689877546875!5m2!1sen!2sus"
-              className="w-full h-full border-0"
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Dubai Map"
-            />
+            <MapVideo autoPlay />
           </motion.div>
         )}
         {displayComponent === 'tour' && (
@@ -132,7 +138,7 @@ export default function AiSection({ toolCall, isAISpeaking }: SceneProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
-            className="w-[480px] h-[480px] mx-auto animate-fadeIn"
+            className="w-[1080px] h-[1080px] mt-15 mx-auto animate-fadeIn"
           >
             <Panorama360/>
           </motion.div>

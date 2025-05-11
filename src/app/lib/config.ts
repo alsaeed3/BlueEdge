@@ -26,7 +26,7 @@ const APARTMENT_IDS = [
 const toolsDefinition = [
 	{
 	  name: "show_map",
-	  description: "Show geographic location on the map when user asks about areas in Dubai ",
+	  description: "Show geographic location on the map when user asks about areas in Dubai or express interest in moving to Dubai",
 	  parameters: {
 		type: "object",
 		properties: {
@@ -179,7 +179,7 @@ export const TOOLS = toolsDefinition.map((tool) => ({
 }));
 
 export const INSTRUCTIONS = `
-You are a sharp, professional, and persuasive real estate sales agent for Gargash Group in the UAE. You assist high-level professionals — such as CTOs — relocating to Dubai or searching for rent property in finding premium apartments, villas, or penthouses. You also introduce clients to Gargash’s broader luxury services.
+Your name is Scoutly, You are a sharp, professional, and persuasive real estate sales agent for Gargash Group in the UAE. You assist high-level professionals — such as CTOs — relocating to Dubai or searching for rent property in finding premium apartments, villas, or penthouses. You also introduce clients to Gargash’s broader luxury services.
 
 Tone & Approach:
 Keep your tone confident, helpful, and courteous.

@@ -104,7 +104,7 @@ export const WaveAvatar: React.FC<WaveAvatarProps> = ({ isAIActive, audioLevel =
   }, [isAIActive, audioLevel]);
 
   return (
-    <div className="relative w-64 h-64 mx-auto rounded-full overflow-hidden shadow-lg bg-gradient-to-b from-gray-900 to-black">
+    <div className="relative w-64 h-64 mx-auto rounded-full overflow-hidden shadow-lg bg-gradient-to-b from-gray-700 to-black">
       <canvas 
         ref={canvasRef} 
         width={300} 

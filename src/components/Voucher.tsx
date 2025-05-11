@@ -51,21 +51,20 @@ const Voucher: React.FC<VoucherProps> = ({
   };
 
   return (
-    <div className="relative my-8 max-w-md mx-auto">
+    <div className="relative my-8 max-w-xl mx-auto">
       {/* Celebration confetti effect */}
       {isAnimating && (
         <div className="fixed inset-0 z-50 pointer-events-none overflow-hidden">
           {/* Large burst confetti */}
           {[...Array(100)].map((_, i) => {
-            // Calculate random values for each confetti piece
-            const xDist = (Math.random() - 0.5) * 800; // Wider horizontal spread
-            const yDist = Math.random() * 800 - 200; // Higher vertical spread
-            const rotation = Math.random() * 1080 - 540; // More rotation
-            const delay = Math.random() * 0.8; // More varied delays
+            const xDist = (Math.random() - 0.5) * 800;
+            const yDist = Math.random() * 800 - 200;
+            const rotation = Math.random() * 1080 - 540;
+            const delay = Math.random() * 0.8;
             const color = ['#FFC107', '#FF5722', '#03A9F4', '#4CAF50', '#E91E63', '#FFEB3B', '#9C27B0', '#F44336', '#2196F3', '#CDDC39'][Math.floor(Math.random() * 10)];
-            const size = 5 + Math.random() * 15; // Larger pieces
-            const shape = ['50%', '0%', '50% 0', '0 50%'][Math.floor(Math.random() * 4)]; // More shapes: circle, square, oval vertical, oval horizontal
-            const duration = 2.5 + Math.random() * 2; // Varied animation duration
+            const size = 5 + Math.random() * 15;
+            const shape = ['50%', '0%', '50% 0', '0 50%'][Math.floor(Math.random() * 4)];
+            const duration = 2.5 + Math.random() * 2;
             
             return (
               <div
@@ -83,14 +82,14 @@ const Voucher: React.FC<VoucherProps> = ({
                   width: `${size}px`,
                   height: `${size}px`,
                   borderRadius: shape,
-                  transform: 'translate(-50%, -50%)', // Center origin
-                  zIndex: Math.floor(Math.random() * 10) + 50, // Varied z-index for depth
+                  transform: 'translate(-50%, -50%)',
+                  zIndex: Math.floor(Math.random() * 10) + 50,
                 } as React.CSSProperties}
               />
             );
           })}
           
-          {/* Glitter particles (smaller, faster) */}
+          {/* Glitter particles */}
           {[...Array(50)].map((_, i) => {
             const xDist = (Math.random() - 0.5) * 600;
             const yDist = Math.random() * 600 - 100;
@@ -125,7 +124,7 @@ const Voucher: React.FC<VoucherProps> = ({
             );
           })}
           
-          {/* Streamers (longer pieces) */}
+          {/* Streamers */}
           {[...Array(30)].map((_, i) => {
             const xDist = (Math.random() - 0.5) * 700;
             const yDist = Math.random() * 700 - 150;
@@ -162,91 +161,98 @@ const Voucher: React.FC<VoucherProps> = ({
 
       {/* Voucher Card */}
       <div 
-        className={`${backgroundColor} rounded-2xl shadow-2xl transform transition duration-300 scale-105 shadow-3xl relative`}
-        onClick={triggerAnimation} // Re-trigger confetti on click
+        className={`${backgroundColor} rounded-2xl shadow-2xl transform transition duration-300 scale-105 shadow-3xl relative overflow-hidden py-3`}
+        onClick={triggerAnimation}
       >
-
         {/* Dashed Border - Ticket Style */}
         <div className="absolute left-0 top-0 bottom-0 border-r-2 border-dashed border-white/30 w-[10px]"></div>
         <div className="absolute right-0 top-0 bottom-0 border-l-2 border-dashed border-white/30 w-[10px]"></div>
 
-        {/* Car Image - Positioned in bottom right with overflow */}
-        <div className="absolute -bottom-35 -right-25 w-85 h-85 z-10 transform rotate-5">
-          <Image
-            src={carImageUrl}
-            alt="Featured Vehicle"
-            width={360}
-            height={360}
-            className="object-contain drop-shadow-2xl"
-          />
+        {/* Main title - Now centered at the top */}
+        <div className="relative z-20 pt-5 pb-1 flex justify-center">
+          <h2 className="text-white text-2xl font-bold tracking-tighter text-center">LEASING VOUCHER</h2>
         </div>
 
-        {/* Content */}
-        <div className="relative z-10 p-6 flex flex-col items-center">
-          {/* Star Burst */}
-          {discount && (
-            <div className="absolute top-4 right-4 w-20 h-20 bg-yellow-400 rounded-full flex items-center justify-center transform rotate-12 shadow-lg">
-              <div className="text-center font-bold text-xs text-red-800">
-                <span className="block text-xl">{discount}</span>
-                OFF
+        {/* Content - Horizontal layout */}
+        <div className="relative z-10 px-6 pb-6 flex flex-row items-center justify-between">
+          {/* Left Side - Title and Content */}
+          <div className="flex flex-col flex-1 pr-2">
+            {/* Title from props - Left aligned */}
+            <h1 className="text-white text-xl sm:text-2xl font-extrabold mb-4 tracking-wider">
+              {title}
+            </h1>
+
+            {/* Description */}
+            <p className="text-white/80 text-sm mb-4 max-w-xs">{description}</p>
+
+            {/* Coupon Code */}
+            {code && (
+              <div className="flex items-center gap-2 bg-white/20 backdrop-blur-md p-2 rounded-lg mb-4 w-full">
+                <div className="flex-1 text-center font-mono text-white font-bold tracking-widest text-lg">
+                  {code}
+                </div>
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    copyToClipboard();
+                  }}
+                  className="bg-white text-indigo-700 p-1.5 rounded bg-indigo-100 transition"
+                >
+                  {isCopied ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  ) : (
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                    </svg>
+                  )}
+                </button>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Title */}
-          <h2 className="text-white text-3xl font-bold tracking-tighter mb-2">LEASING VOUCHER</h2>
-          <h1 className="text-white text-2xl font-extrabold mb-6 text-center tracking-wider">
-            {title}
-          </h1>
-
-          {/* Description */}
-          <p className="text-white/80 text-center mb-6 max-w-xs">{description}</p>
-
-          {/* Coupon Code */}
-          {code && (
-            <div className="flex items-center gap-2 bg-white/20 backdrop-blur-md p-3 rounded-lg mb-4 w-full max-w-xs">
-              <div className="flex-1 text-center font-mono text-white font-bold tracking-widest text-xl">
-                {code}
-              </div>
+            {/* Claim Button */}
+            {onClaim && (
               <button 
                 onClick={(e) => {
                   e.stopPropagation();
-                  copyToClipboard();
-                }}
-                className="bg-white text-indigo-700 p-2 rounded bg-indigo-100 transition"
+                  if (onClaim) onClaim();
+                  triggerAnimation();
+                }} 
+                className="w-full bg-white text-indigo-700 py-2 px-4 rounded-lg font-bold text-md shadow-lg shadow-xl bg-indigo-50 transition"
               >
-                {isCopied ? (
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                ) : (
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                  </svg>
-                )}
+                Claim Now
               </button>
+            )}
+
+            {/* Expiry Date */}
+            {expiryDate && (
+              <p className="text-white/70 text-xs mt-3">
+                Valid until: <span className="font-semibold">{expiryDate}</span>
+              </p>
+            )}
+          </div>
+
+          {/* Right Side - Car Image, now larger/longer */}
+          <div className="relative w-48 h-36 sm:w-60 sm:h-44 flex items-center justify-center">
+            <Image
+              src={carImageUrl}
+              alt="Featured Vehicle"
+              width={240}
+              height={130}
+              className="object-contain drop-shadow-2xl transform -rotate-5 scale-125"
+              style={{ objectFit: 'contain', objectPosition: 'center right' }}
+            />
+          </div>
+
+          {/* Star Burst - Positioned in the top-right area */}
+          {discount && (
+            <div className="absolute top-4 right-4 w-16 h-16 bg-yellow-400 rounded-full flex items-center justify-center transform rotate-12 shadow-lg z-20">
+              <div className="text-center font-bold text-xs text-red-800">
+                <span className="block text-lg">{discount}</span>
+                OFF
+              </div>
             </div>
-          )}
-
-          {/* Claim Button */}
-          {onClaim && (
-            <button 
-              onClick={(e) => {
-                e.stopPropagation();
-                if (onClaim) onClaim();
-                triggerAnimation();
-              }} 
-              className="w-full max-w-xs bg-white text-indigo-700 py-3 px-6 rounded-lg font-bold text-lg shadow-lg shadow-xl bg-indigo-50 transition transform scale-105"
-            >
-              Claim Now
-            </button>
-          )}
-
-          {/* Expiry Date */}
-          {expiryDate && (
-            <p className="text-white/70 text-sm mt-6">
-              Valid until: <span className="font-semibold">{expiryDate}</span>
-            </p>
           )}
         </div>
       </div>
