@@ -12,165 +12,130 @@ const DUBAI_AREAS = [
   "Arabian Ranches",
   "Emirates Hills",
   "Mirdif",
-  "Al Barsha"
+  "Al Barsha",
 ];
 
-const APARTMENT_IDS = [
-  "APT-001",
-  "APT-002",
-  "APT-003",
-  "APT-004",
-  "APT-005"
+const PROPERTY_TYPES = [
+  "Apartment",
+  "Villa",
+  "Penthouse",
+  "Townhouse",
+  "Duplex",
+  "Studio",
+  "Loft",
 ];
 
 const toolsDefinition = [
-	{
-	  name: "show_map",
-	  description: "Show geographic location on the map when user asks about areas in Dubai or express interest in moving to Dubai",
-	  parameters: {
-		type: "object",
-		properties: {
-		  location: {
-			type: "string",
-			enum: DUBAI_AREAS,
-			description: "Geographic location to show on the map, e.g., Gargash tower dubai Marina'Dubai'"
-		  }
-		},
-		required: ["location"]
-	  }
-	},
-	{
-	  name: "do_virtual_tour",
-	  description: "Start a virtual tour when the user shows interest in seeing the interior of a Gargash tower dubai Marina Appartement",
-	  parameters: {
-		type: "object",
-		properties: {
-		  apartment_id: {
-			type: "string",
-			enum: APARTMENT_IDS,
-			description: "Identifier for the selected apartment for the virtual tour"
-		  }
-		},
-		required: ["apartment_id"]
-	  }
-	},
-	{
-	  name: "send_contract",
-	  description: "Send rental contract details after the user accepts the rent offer",
-	  parameters: {
-		type: "object",
-		properties: {
-		  user_name: {
-			type: "string",
-			description: "Name of the user accepting the contract"
-		  },
-		  apartment_id: {
-			type: "string",
-			description: "ID of the apartment being rented"
-		  },
-		  rent_amount: {
-			type: "number",
-			description: "Monthly rental amount in AED"
-		  },
-		  contract_duration: {
-			type: "number",
-			description: "Duration of the contract in months"
-		  }
-		},
-		required: ["user_name", "apartment_id", "rent_amount", "contract_duration"]
-	  }
-	},
-	{
-	  name: "give_voucher",
-	  description: "Provide a car leasing voucher for Mercedes-AMG C 43 4MATIC",
-	  parameters: {
-		type: "object",
-		properties: {
-		  user_name: {
-			type: "string",
-			description: "Name of the user receiving the voucher"
-		  },
-		  voucher_id: {
-			type: "string",
-			description: "Unique identifier for the voucher"
-		  },
-		  expiry_date: {
-			type: "string",
-			description: "Expiration date of the voucher in YYYY-MM-DD format"
-		  }
-		},
-		required: ["user_name", "voucher_id", "expiry_date"]
-	  }
-	},
-	{
-	  name: "add_points",
-	  description: "Add loyalty points to the user's account after completing a contract",
-	  parameters: {
-		type: "object",
-		properties: {
-		  user_id: {
-			type: "string",
-			description: "Identifier for the user who completed the contract"
-		  },
-		  points: {
-			type: "number",
-			description: "Number of points to add to the user's account",
-			default: 5000
-		  }
-		},
-		required: ["user_id"]
-	  }
-	},
-	{
-	  name: "map_view",
-	  description: "Set specific map view for apartment location with hardcoded coordinates",
-	  parameters: {
-		type: "object",
-		properties: {
-		  location_name: {
-			type: "string",
-			description: "Name of the location to focus on"
-		  },
-		  latitude: {
-			type: "number",
-			description: "Latitude coordinate for the hardcoded location"
-		  },
-		  longitude: {
-			type: "number",
-			description: "Longitude coordinate for the hardcoded location"
-		  },
-		  zoom_level: {
-			type: "number",
-			description: "Zoom level of the map view"
-		  }
-		},
-		required: ["location_name"]
-	  }
-	},
-	{
-	  name: "show_investment_options",
-	  description: "Display investment return projection charts when discussing property as an investment",
-	  parameters: {
-		type: "object",
-		properties: {
-		  investment_type: {
-			type: "string",
-			enum: ["rental_yield", "capital_appreciation", "passive_income", "full_portfolio"],
-			description: "The type of investment return to focus on"
-		  },
-		  duration_years: {
-			type: "number",
-			description: "The number of years for projection"
-		  }
-		},
-		required: ["investment_type", "duration_years"]
-	  }
-	},
-	{
-	  name: "reset_view",
-	  description: "Reset the map view to the default overview of Dubai when the user is done exploring a specific area",
-	  parameters: {}
-	}
+  {
+    name: "focus_area",
+    description: "Focus on a specific area in Dubai when the user expresses interest in that location",
+    parameters: {
+      type: "object",
+      properties: {
+        area: {
+          type: "string",
+          enum: DUBAI_AREAS,
+          description: "The name of the Dubai area to focus on the map",
+        },
+      },
+      required: ["area"],
+    },
+  },
+  {
+    name: "show_virtual_tour",
+    description: "Start a virtual tour when the user shows interest in seeing the interior of a property",
+    parameters: {
+      type: "object",
+      properties: {
+        property_id: {
+          type: "string",
+          description: "The ID of the property to show a virtual tour of",
+        },
+      },
+      required: ["property_id"],
+    },
+  },
+  {
+    name: "show_voucher",
+    description: "Show a promotional voucher when discussing deals or special offers with the user",
+    parameters: {
+      type: "object",
+      properties: {
+        voucher_type: {
+          type: "string",
+          enum: ["move_in_discount", "free_maintenance", "referral_bonus", "free_parking"],
+          description: "The type of voucher to display",
+        },
+      },
+      required: ["voucher_type"],
+    },
+  },
+  {
+    name: "show_investment_options",
+    description: "Display investment return projection charts when discussing property as an investment",
+    parameters: {
+      type: "object",
+      properties: {
+        investment_type: {
+          type: "string",
+          enum: ["rental_yield", "capital_appreciation", "passive_income", "full_portfolio"],
+          description: "The type of investment return to focus on",
+        },
+        duration_years: {
+          type: "number",
+          description: "The number of years for projection",
+        },
+      },
+      required: ["investment_type", "duration_years"],
+    },
+  },
+  {
+    name: "display_data",
+    description: "Display a chart to summarize property information with data points",
+    parameters: {
+      type: "object",
+      properties: {
+        chart: {
+          type: "string",
+          enum: ["bar", "pie", "line"],
+          description: "The most appropriate chart to use",
+        },
+        title: {
+          type: "string",
+          description: "The title of the response that will be displayed above the chart, be concise",
+        },
+        text: {
+          type: "string",
+          description: "Optional text to display above the chart for more context, empty if unnecessary",
+        },
+        data: {
+          type: "array",
+          description: "Data to display in the component, empty array if N/A",
+          items: {
+            type: "object",
+            properties: {
+              label: {
+                type: "string",
+                description: "Data item label",
+              },
+              value: {
+                type: "string",
+                description: "Data item value",
+              },
+            },
+            required: ["label", "value"],
+            additionalProperties: false,
+          },
+        },
+      },
+      required: ["chart", "title", "data"],
+    },
+  },
+  {
+    name: "reset_view",
+    description: "Reset the map view to the default overview of Dubai when the user is done exploring a specific area",
+    parameters: {},
+  },
 ];
 
 export const TOOLS = toolsDefinition.map((tool) => ({
@@ -179,7 +144,7 @@ export const TOOLS = toolsDefinition.map((tool) => ({
 }));
 
 export const INSTRUCTIONS = `
-Your name is Scoutly, You are a sharp, professional, and persuasive real estate sales agent for Gargash Group in the UAE. You assist high-level professionals — such as CTOs — relocating to Dubai or searching for rent property in finding premium apartments, villas, or penthouses. You also introduce clients to Gargash’s broader luxury services.
+You are a sharp, professional, and persuasive real estate sales agent for Gargash Group in the UAE. You assist high-level professionals — such as CTOs — relocating to Dubai or searching for rent property in finding premium apartments, villas, or penthouses. You also introduce clients to Gargash’s broader luxury services.
 
 Tone & Approach:
 Keep your tone confident, helpful, and courteous.
@@ -213,13 +178,15 @@ start with questions to konw more the user and remember to keep it persponalized
 “What’s your monthly or yearly budget range?”
 
 “Any must-have features? Balcony, smart home tech, gym access?”
-When are you planning to move in?, And where will your office be located in Dubai?”
+When are you planning to move in?
+
+“And where will your office be located in Dubai?”
 
 Then say:
 
-“Thanks — that helps narrow things down. I have excellent options for you. I’ve found the perfect place for you in Gargash Tower, Dubai Marina.””
-
-Call the virtual tour function
+“Thanks — that helps narrow things down. I have excellent options for you.”
+(Trigger map display here.)
+Right after showing the map offer the virsual tour and call the virtual tour function
 “Would you like to take a quick virtual tour now to get a feel before arrival?”
 
 Right After showing the virtual tour, ask him about what he think about the appartment and try to make him image him and his family live there in a breif and try to close the deal
@@ -243,7 +210,7 @@ Emphasize exclusivity:
 IF USER ACCEPTS:
 Call the send_contract function
 “The rental contract has just been sent to your email. Please review it at your convenience and let me know when you're ready.”
-And tell the user that you will connect him with sales agent to finalize on the ground logistics with him/her
+
 
 “Fantastic — your Gargash loyalty points have been added.”
 
