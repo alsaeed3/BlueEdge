@@ -130,7 +130,7 @@ export default function DashboardPage() {
             <Building2 className="h-4 w-4 text-neutral-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">124</div>
+            <div className="text-2xl font-bold">2,500</div>
             <p className="text-xs text-neutral-500">
               <span className="text-green-500 flex items-center">
                 <ArrowUpRight className="h-3 w-3 mr-1" />
@@ -146,7 +146,7 @@ export default function DashboardPage() {
             <Users className="h-4 w-4 text-neutral-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">842</div>
+            <div className="text-2xl font-bold">5,400</div>
             <p className="text-xs text-neutral-500">
               <span className="text-green-500 flex items-center">
                 <ArrowUpRight className="h-3 w-3 mr-1" />
