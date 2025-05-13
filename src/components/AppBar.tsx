@@ -41,7 +41,7 @@ export default function AppBar({ isSessionActive = false, handleConnectClick }: 
             </div>
           </div>
           <div className="font-bold text-xl bg-gradient-to-r from-indigo-400 to-purple-500 bg-clip-text text-transparent">
-            Scoutly
+            Escoutly
           </div>
         </div>
         

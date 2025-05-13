@@ -78,10 +78,10 @@ export function Sidebar() {
       <div className="px-3 py-2 flex-1">
         <Link href="/dashboard" className="flex items-center pl-3 mb-14">
           <div className="relative h-8 w-8 mr-4">
-            <img src="/scoutly-logo.svg" alt="Scoutly Logo" className="h-8 w-8" />
+            <img src="/Escoutly-logo.svg" alt="Escoutly Logo" className="h-8 w-8" />
           </div>
           <h1 className="text-2xl font-bold">
-            Scoutly Admin
+            Escoutly Admin
           </h1>
         </Link>
         <div className="space-y-1">

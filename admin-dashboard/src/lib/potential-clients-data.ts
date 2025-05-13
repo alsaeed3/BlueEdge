@@ -244,7 +244,7 @@ export const simeonWansiScenario: ScenarioStep[] = [
         "Prepare personalized outreach message",
         "Schedule delivery for optimal engagement time"
       ],
-      finalContent: "Targeted Real Estate Opportunity: Downtown Dubai Smart Penthouse\n\nDear Simeon,\n\nCongratulations on your new role as CTO at Dubai Technologies LLC. For technology leaders like yourself, we've reserved an exceptional smart penthouse in Downtown Dubai, featuring complete home automation, dedicated fiber connectivity, and just a 7-minute commute to your new office. This property combines luxury living with the technology infrastructure that matches your professional standards.\n\nLimited viewing appointments available this week.\n\nRegards,\nScoutly Luxury Properties"
+      finalContent: "Targeted Real Estate Opportunity: Downtown Dubai Smart Penthouse\n\nDear Simeon,\n\nCongratulations on your new role as CTO at Dubai Technologies LLC. For technology leaders like yourself, we've reserved an exceptional smart penthouse in Downtown Dubai, featuring complete home automation, dedicated fiber connectivity, and just a 7-minute commute to your new office. This property combines luxury living with the technology infrastructure that matches your professional standards.\n\nLimited viewing appointments available this week.\n\nRegards,\nEscoutly Luxury Properties"
     },
     visualContent: {
       type: "ad",
@@ -301,7 +301,7 @@ export const simeonWansiScenario: ScenarioStep[] = [
     },
     visualContent: {
       type: "document",
-      content: "REAL ESTATE LEASING OPTIONS\nBETWEEN: Scoutly Luxury Properties AND Simeon Wansi\nPROPERTY: Downtown Dubai Smart Penthouse, Unit 4501\n\nOPTION 1: STANDARD LEASE\n• Yearly Payment: AED 100,000\n• Quarterly Payment: AED 25,000\n• Contract Term: 12 months\n• Security Deposit: AED 20,000\n• No ownership rights\n• Smart Home Warranty Included\n\nOPTION 2: PREMIUM LEASE WITH TOKEN\n• Yearly Payment: AED 120,000\n• Quarterly Payment: AED 30,000\n• Contract Term: 12 months\n• Security Deposit: AED 20,000\n• Includes digital property token (partial ownership)\n• Smart Home Warranty Included\n• Priority renewal rights\n\n[Document prepared for digital signature]"
+      content: "REAL ESTATE LEASING OPTIONS\nBETWEEN: Escoutly Luxury Properties AND Simeon Wansi\nPROPERTY: Downtown Dubai Smart Penthouse, Unit 4501\n\nOPTION 1: STANDARD LEASE\n• Yearly Payment: AED 100,000\n• Quarterly Payment: AED 25,000\n• Contract Term: 12 months\n• Security Deposit: AED 20,000\n• No ownership rights\n• Smart Home Warranty Included\n\nOPTION 2: PREMIUM LEASE WITH TOKEN\n• Yearly Payment: AED 120,000\n• Quarterly Payment: AED 30,000\n• Contract Term: 12 months\n• Security Deposit: AED 20,000\n• Includes digital property token (partial ownership)\n• Smart Home Warranty Included\n• Priority renewal rights\n\n[Document prepared for digital signature]"
     }
   },
   {
@@ -327,11 +327,11 @@ export const simeonWansiScenario: ScenarioStep[] = [
         "Activate exclusive event invitations",
         "Schedule follow-up for additional benefits explanation"
       ],
-      finalContent: "Welcome to Scoutly Gold Status! Your premium lease selection has earned you our gold loyalty tier with 5,000 Scoutly Points. Benefits include dedicated concierge service, priority access to new property listings, VIP event invitations, and exclusive partner benefits with luxury brands across Dubai. Your personal concierge will contact you within 24 hours to provide a complete overview of your Gold membership privileges."
+      finalContent: "Welcome to Escoutly Gold Status! Your premium lease selection has earned you our gold loyalty tier with 5,000 Escoutly Points. Benefits include dedicated concierge service, priority access to new property listings, VIP event invitations, and exclusive partner benefits with luxury brands across Dubai. Your personal concierge will contact you within 24 hours to provide a complete overview of your Gold membership privileges."
     },
     visualContent: {
       type: "confirmation",
-      content: "Scoutly GOLD STATUS ACHIEVED\n• 5,000 Scoutly Points added to your account\n• Dedicated Lifestyle Concierge assigned: Sophia Rahman\n• Priority access to all new property releases\n• Complimentary property maintenance for 1 year\n• VIP access to Dubai's most exclusive events\n• Luxury brand partner privileges activated"
+      content: "Escoutly GOLD STATUS ACHIEVED\n• 5,000 Escoutly Points added to your account\n• Dedicated Lifestyle Concierge assigned: Sophia Rahman\n• Priority access to all new property releases\n• Complimentary property maintenance for 1 year\n• VIP access to Dubai's most exclusive events\n• Luxury brand partner privileges activated"
     }
   },
   {
@@ -357,7 +357,7 @@ export const simeonWansiScenario: ScenarioStep[] = [
         "Create side-by-side comparison of lease vs. purchase",
         "Schedule personalized consultation to present options"
       ],
-      finalContent: "Executive Lease Opportunity: The Scoutly Executives Program provides a comprehensive luxury vehicle leasing solution tailored for your new position. We've prepared a personalized offer including a Mercedes E-Class with flexible 24-month terms, complete maintenance coverage, and tax benefits for business use. This program includes the option to upgrade to a new model after 12 months with no additional fees."
+      finalContent: "Executive Lease Opportunity: The Escoutly Executives Program provides a comprehensive luxury vehicle leasing solution tailored for your new position. We've prepared a personalized offer including a Mercedes E-Class with flexible 24-month terms, complete maintenance coverage, and tax benefits for business use. This program includes the option to upgrade to a new model after 12 months with no additional fees."
     },
     visualContent: {
       type: "chart",
@@ -391,7 +391,7 @@ export const simeonWansiScenario: ScenarioStep[] = [
     },
     visualContent: {
       type: "product",
-      content: "MERCEDES-AMG E53\n• Executive Technology Package\n• MBUX AI with smart home integration\n• Burmester® high-end 3D surround sound\n• Obsidian Black exterior / Macchiato Beige leather\n• Available for immediate delivery\n• Exclusive financing: 1.9% for Scoutly Elite members\n• Complimentary first year maintenance\n• Dedicated personal service advisor"
+      content: "MERCEDES-AMG E53\n• Executive Technology Package\n• MBUX AI with smart home integration\n• Burmester® high-end 3D surround sound\n• Obsidian Black exterior / Macchiato Beige leather\n• Available for immediate delivery\n• Exclusive financing: 1.9% for Escoutly Elite members\n• Complimentary first year maintenance\n• Dedicated personal service advisor"
     }
   },
   {
@@ -417,7 +417,7 @@ export const simeonWansiScenario: ScenarioStep[] = [
         "Prepare executive summary with key benefits",
         "Schedule investment consultation meeting"
       ],
-      finalContent: "Welcome to Scoutly Wealth Management. We've prepared a tailored investment strategy that complements your real estate acquisition and new position. Our Technology Leaders Portfolio offers exposure to global tech growth while our UAE Property Fund provides diversification across commercial real estate. As a new UAE resident, you'll benefit from our tax-optimized investment structures designed specifically for technology executives relocating to the region. Your Scoutly Elite status provides access to exclusive investment opportunities not available to the general market."
+      finalContent: "Welcome to Escoutly Wealth Management. We've prepared a tailored investment strategy that complements your real estate acquisition and new position. Our Technology Leaders Portfolio offers exposure to global tech growth while our UAE Property Fund provides diversification across commercial real estate. As a new UAE resident, you'll benefit from our tax-optimized investment structures designed specifically for technology executives relocating to the region. Your Escoutly Elite status provides access to exclusive investment opportunities not available to the general market."
     },
     visualContent: {
       type: "chart",
