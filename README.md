@@ -1,6 +1,6 @@
-# BlueEdge - Comprehensive Real Estate Platform
+# Scoutly - Comprehensive Real Estate Platform
 
-BlueEdge is a full-featured real estate platform consisting of two main components:
+Scoutly is a full-featured real estate platform consisting of two main components:
 1. An interactive AI assistant with rich visual components for client engagement
 2. A comprehensive admin dashboard for real estate professionals
 
@@ -175,16 +175,16 @@ The AI behavior can be modified by updating the instructions and available tools
 
 ## Contributing
 
-# Contributors
+### Contributors
 
 Team: BlueEdge
 
 Members:
-    Ali Saeed
-    Ahmed Salem
-    Aarif
-    Mohammed Khedr
-    Simon
+   - Ali Saeed
+   - Ahmed Salem
+   - Aarif
+   - Mohammed Khedr
+   - Simeon
 
 
 Contributions are welcome! Please feel free to submit a Pull Request.
@@ -194,11 +194,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 3. Commit your changes (`git commit -m 'Add some amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
-
----
-
-*This documentation is current as of May 2023*
-
 
 ---
 

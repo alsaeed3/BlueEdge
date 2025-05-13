@@ -54,7 +54,7 @@ export default function AiSection({ toolCall, isAISpeaking, audioLevel = 0 }: Sc
     }
 
     switch (name) {
-      case "show_map":
+      case "focus_area":
         // Extract location if provided in arguments
         if (args.location) {
           // If coordinates are provided directly, use them
@@ -68,16 +68,16 @@ export default function AiSection({ toolCall, isAISpeaking, audioLevel = 0 }: Sc
         }
         setDisplayComponent('map');
         break;
-      case "do_virtual_tour":
+      case "show_virtual_tour":
         setDisplayComponent('tour');
         break;
       case "send_contract":
         setDisplayComponent('contract');
         break;
-      case "give_voucher":
+      case "show_voucher":
         setDisplayComponent('voucher');
         break;
-      case "show_property_investment":
+      case "show_investment_options":
         if (args.propertyName) {
           setInvestmentData({
             propertyName: args.propertyName || "Dubai Downtown Property",
