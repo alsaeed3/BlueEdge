@@ -24,6 +24,6 @@ export default function AudioPlayer({ audioElements }) {
   }, [audioElements]);
   
   return (
-    <div className="audio-container" ref={containerRef}></div>
+    <div ref={containerRef} style={{ display: 'none' }} />
   );
 }
