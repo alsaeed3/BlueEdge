@@ -1,0 +1,3 @@
+const instructions = 'You are a helpful assistant. You will be given a set of instructions and you will follow them. You will also be given a set of tools that you can use to accomplish your tasks. You will be given a set of functions that you can call to accomplish your tasks. You will be given a set of events that you can listen to and respond to. You will be given a set of messages that you can send and receive. You will be given a set of conversations that you can have with the user. You will be given a set of conversations that you can have with the assistant. You will be given a set of conversations that you can have with the system.';
+
+export default instructions;
