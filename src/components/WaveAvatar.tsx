@@ -4,10 +4,11 @@ import { useEffect, useRef } from 'react';
 
 interface WaveAvatarProps {
   isAIActive: boolean;
+  isSpeaking: boolean;
   audioLevel?: number; // Audio level from 0 to 1
 }
 
-export const WaveAvatar: React.FC<WaveAvatarProps> = ({ isAIActive, audioLevel = 0 }) => {
+export const WaveAvatar: React.FC<WaveAvatarProps> = ({ isAIActive = false, audioLevel = 0, isSpeaking = false }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number | null>(null);
 
@@ -33,7 +34,7 @@ export const WaveAvatar: React.FC<WaveAvatarProps> = ({ isAIActive, audioLevel =
       const maxAdditionalSize = 60;
       let currentSize = baseSize;
       
-      if (isAIActive) {
+      if (isSpeaking) {
         currentSize = baseSize + (maxAdditionalSize * audioLevel);
       }
       
@@ -47,7 +48,7 @@ export const WaveAvatar: React.FC<WaveAvatarProps> = ({ isAIActive, audioLevel =
         const circleSize = currentSize + (i * 15) + oscillation;
         
         // Calculate opacity (fade out as circles get larger)
-        const baseOpacity = isAIActive ? 0.7 : 0.3;
+        const baseOpacity = isSpeaking ? 0.7 : 0.3;
         const opacity = baseOpacity * (1 - (i / numCircles));
         
         // Create gradient
@@ -64,46 +65,46 @@ export const WaveAvatar: React.FC<WaveAvatarProps> = ({ isAIActive, audioLevel =
         ctx.fill();
       }
       
-      // Draw center wave animation
-      const waveRadius = baseSize * 0.8;
-      const waveCount = 20;
-      const waveAmplitude = isAIActive ? 5 + (audioLevel * 10) : 2;
-      const waveFrequency = 6;
-      
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, waveRadius, 0, Math.PI * 2);
-      ctx.clip();
-      
-      // Background for wave area
-      ctx.fillStyle = 'rgba(37, 99, 235, 0.3)';
-      ctx.fillRect(centerX - waveRadius, centerY - waveRadius, waveRadius * 2, waveRadius * 2);
-      
-      // Draw wave
-      ctx.beginPath();
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
-      
-      for (let x = centerX - waveRadius; x < centerX + waveRadius; x += 1) {
-        // Create multiple overlapping waves with different phases
-        let y = centerY;
+      // Draw center wave animation only if isAIActive is true
+      if (isAIActive) {
+        const waveRadius = baseSize * 0.8;
+        const waveAmplitude = isSpeaking ? 5 + (audioLevel * 10) : 2;
+        const waveFrequency = 6;
         
-        // Main wave - responsive to audio
-        y += Math.sin((x / waveRadius) * waveFrequency + time * 3) * waveAmplitude;
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, waveRadius, 0, Math.PI * 2);
+        ctx.clip();
         
-        // Secondary waves
-        y += Math.sin((x / waveRadius) * waveFrequency * 1.5 + time * 2) * (waveAmplitude * 0.4);
-        y += Math.cos((x / waveRadius) * waveFrequency * 0.8 - time) * (waveAmplitude * 0.3);
+        // Background for wave area
+        ctx.fillStyle = 'rgba(37, 99, 235, 0.3)';
+        ctx.fillRect(centerX - waveRadius, centerY - waveRadius, waveRadius * 2, waveRadius * 2);
         
-        if (x === centerX - waveRadius) {
-          ctx.moveTo(x, y);
-        } else {
-          ctx.lineTo(x, y);
+        // Draw wave
+        ctx.beginPath();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
+        
+        for (let x = centerX - waveRadius; x < centerX + waveRadius; x += 1) {
+          // Create multiple overlapping waves with different phases
+          let y = centerY;
+          
+          // Main wave - responsive to audio
+          y += Math.sin((x / waveRadius) * waveFrequency + time * 3) * waveAmplitude;
+          
+          // Secondary waves
+          y += Math.sin((x / waveRadius) * waveFrequency * 1.5 + time * 2) * (waveAmplitude * 0.4);
+          y += Math.cos((x / waveRadius) * waveFrequency * 0.8 - time) * (waveAmplitude * 0.3);
+          
+          if (x === centerX - waveRadius) {
+            ctx.moveTo(x, y);
+          } else {
+            ctx.lineTo(x, y);
+          }
         }
+        ctx.stroke();
+        ctx.restore();
       }
-      
-      ctx.stroke();
-      ctx.restore();
       
       // Draw center orb
       const centerGradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, baseSize);
@@ -112,7 +113,7 @@ export const WaveAvatar: React.FC<WaveAvatarProps> = ({ isAIActive, audioLevel =
       centerGradient.addColorStop(1, 'rgba(59, 130, 246, 0.7)');
       
       // Add subtle glow effect when active
-      if (isAIActive) {
+      if (isSpeaking) {
         ctx.shadowColor = 'rgba(99, 102, 241, 0.8)';
         ctx.shadowBlur = 20;
         ctx.beginPath();
@@ -138,7 +139,7 @@ export const WaveAvatar: React.FC<WaveAvatarProps> = ({ isAIActive, audioLevel =
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [isAIActive, audioLevel]);
+  }, [isAIActive, isSpeaking, audioLevel]);
 
   return (
     <div className="relative w-64 h-64 mx-auto rounded-full overflow-hidden shadow-lg bg-gradient-to-b from-gray-700 to-black">
