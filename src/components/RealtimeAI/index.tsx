@@ -54,7 +54,7 @@ export default function RealtimeAI() {
         />
         <AudioPlayer audioElements={audioElements} />
       </CardContent>
-      {process.env.NODE_ENV !== "development" && (
+      {/* {process.env.NODE_ENV === "development" && (
         <CardFooter className="p-4 bg-muted/20 border-t border-border/50">
           <div
             className="debug-info w-full text-xs font-mono text-muted-foreground/80 
@@ -74,7 +74,7 @@ export default function RealtimeAI() {
             </p>
           </div>
         </CardFooter>
-      )}
+      )} */}
     </Card>
   );
 }
