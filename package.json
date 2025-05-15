@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@radix-ui/react-slot": "^1.2.2",
     "@splinetool/react-spline": "^4.0.0",
     "@splinetool/runtime": "^1.9.92",
     "chart.js": "^4.4.9",
