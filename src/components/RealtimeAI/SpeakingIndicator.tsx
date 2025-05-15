@@ -13,7 +13,7 @@ export default function SpeakingIndicator({
   status = 'disconnected'
 }: SpeakingIndicatorProps) {
   return (
-    <div className="flex justify-center items-center my-4" style={{ minHeight: '250px' }}>
+    <div className="flex justify-center items-center" style={{ minHeight: '250px' }}>
       <WaveAvatar 
         isAIActive={status === 'connected'}
         isSpeaking={isSpeaking} 
