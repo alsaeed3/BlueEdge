@@ -1,5 +1,5 @@
 import React from 'react';
-import { WaveAvatar } from '@/components/WaveAvatar';
+import WaveAvatar from '@/components/WaveAvatar';
 
 interface SpeakingIndicatorProps {
   isSpeaking?: boolean;
@@ -15,9 +15,9 @@ export default function SpeakingIndicator({
   return (
     <div className="flex justify-center items-center" style={{ minHeight: '250px' }}>
       <WaveAvatar 
-        isAIActive={status === 'connected'}
+        // isAIActive={status === 'connected'}
         isSpeaking={isSpeaking} 
-        audioLevel={audioLevel} 
+        // audioLevel={audioLevel} 
       />
     </div>
   );

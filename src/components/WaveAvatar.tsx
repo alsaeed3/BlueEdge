@@ -1,154 +1,191 @@
-'use client';
+// @ts-nocheck
+import React, { useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-import { useEffect, useRef } from 'react';
+// Helper: Sine Wave Generator (draws multiple sine lines on canvas)
+function drawSineWaves({
+  ctx,
+  width,
+  height,
+  isSpeaking,
+  wavesConfig,
+  gradient,
+  maskRadius,
+}) {
+  ctx.clearRect(0, 0, width, height);
 
-interface WaveAvatarProps {
-  isAIActive: boolean;
-  isSpeaking: boolean;
-  audioLevel?: number; // Audio level from 0 to 1
+  // Mask to a circle (globe)
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(width / 2, height / 2, maskRadius, 0, Math.PI * 2);
+  ctx.closePath();
+  ctx.clip();
+
+  // Draw globe background
+  const globeGradient = ctx.createRadialGradient(
+    width / 2,
+    height / 2,
+    maskRadius * 0.2,
+    width / 2,
+    height / 2,
+    maskRadius
+  );
+  globeGradient.addColorStop(0, "rgba(30,58,138,0.92)"); // blue-900
+  globeGradient.addColorStop(0.7, "rgba(30,41,59,0.95)"); // slate-800
+  globeGradient.addColorStop(1, "rgba(15,23,42,0.98)"); // slate-900
+
+  ctx.beginPath();
+  ctx.arc(width / 2, height / 2, maskRadius, 0, Math.PI * 2);
+  ctx.fillStyle = globeGradient;
+  ctx.fill();
+
+  // Draw straight line if not speaking
+  if (!isSpeaking) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(width * 0.13, height / 2);
+    ctx.lineTo(width * 0.87, height / 2);
+    ctx.strokeStyle = gradient;
+    ctx.lineWidth = 2.5;
+    ctx.shadowColor = "#6366f1";
+    ctx.shadowBlur = 5;
+    ctx.stroke();
+    ctx.restore();
+    ctx.restore();
+    return;
+  }
+
+  // Draw animated waves
+  const now = Date.now() / 800;
+  wavesConfig.forEach((wave, i) => {
+    ctx.save();
+    ctx.beginPath();
+    for (let x = width * 0.13; x <= width * 0.87; x += 1) {
+      // Sine function for each wave
+      const progress = x / wave.wavelength;
+      const time = now * wave.timeModifier;
+      const y =
+        height / 2 +
+        Math.sin(progress + time) * wave.amplitude *
+        // Add a little fade at both ends
+        Math.sin(
+          (Math.PI * (x - width * 0.13)) /
+            (width * 0.87 - width * 0.13)
+        );
+
+      if (x === width * 0.13) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = gradient;
+    ctx.lineWidth = wave.lineWidth;
+    ctx.globalAlpha = 0.85;
+    ctx.shadowColor = "#38bdf8";
+    ctx.shadowBlur = 6;
+    ctx.stroke();
+    ctx.restore();
+  });
+
+  ctx.restore();
 }
 
-export const WaveAvatar: React.FC<WaveAvatarProps> = ({ isAIActive = false, audioLevel = 0, isSpeaking = false }) => {
+/**
+ * SiriWave - a React dark bluish globe Siri-like animated wave component.
+ *
+ * Props:
+ * @param {boolean} isSpeaking - If true, shows animated waves; if false, shows a straight line.
+ * @param {number} size - Width and height of the globe (default: 220)
+ * @param {string} className - Additional className for the container
+ */
+export default function SiriWave({
+  isSpeaking = false,
+  size = 220,
+  className = "",
+}: {
+  isSpeaking?: boolean;
+  size?: number;
+  className?: string;
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationRef = useRef<number | null>(null);
+  const animationRef = useRef<number>();
+
+  // Wave configuration
+  const wavesConfig = [
+    { timeModifier: 4, lineWidth: 2, amplitude: 25, wavelength: 25 },
+    { timeModifier: 2, lineWidth: 2, amplitude: 10, wavelength: 30 },
+    { timeModifier: 1, lineWidth: 2, amplitude: 30, wavelength: 30 },
+    { timeModifier: 3, lineWidth: 2, amplitude: 40, wavelength: 40 },
+    { timeModifier: 0.5, lineWidth: 2, amplitude: 60, wavelength: 60 },
+    { timeModifier: 1.3, lineWidth: 2, amplitude: 40, wavelength: 40 },
+  ];
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    let time = 0;
-    const width = canvas.width;
-    const height = canvas.height;
-    const centerX = width / 2;
-    const centerY = height / 2;
+    let dpr = window.devicePixelRatio || 1;
+    canvas.width = size * dpr;
+    canvas.height = size * dpr;
+    canvas.style.width = `${size}px`;
+    canvas.style.height = `${size}px`;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(dpr, dpr);
 
-    const drawSiriEffect = () => {
-      // Clear canvas
-      ctx.clearRect(0, 0, width, height);
-      
-      // Calculate dynamic amplitude based on AI activity and audio level
-      const baseSize = 200;
-      const maxAdditionalSize = 60;
-      let currentSize = baseSize;
-      
-      if (isSpeaking) {
-        currentSize = baseSize + (maxAdditionalSize * audioLevel);
-      }
-      
-      // Number of circles to draw
-      const numCircles = 5;
-      
-      // Draw multiple concentric circles with varying opacity
-      for (let i = 0; i < numCircles; i++) {
-        // Calculate current circle size with oscillation
-        const oscillation = Math.sin(time * 1.5) * 10;
-        const circleSize = currentSize + (i * 15) + oscillation;
-        
-        // Calculate opacity (fade out as circles get larger)
-        const baseOpacity = isSpeaking ? 0.7 : 0.3;
-        const opacity = baseOpacity * (1 - (i / numCircles));
-        
-        // Create gradient
-        const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, circleSize);
-        gradient.addColorStop(0, `rgba(99, 102, 241, ${opacity})`);     // Indigo
-        gradient.addColorStop(0.5, `rgba(59, 130, 246, ${opacity * 0.8})`); // Blue
-        gradient.addColorStop(1, `rgba(37, 99, 235, 0)`);               // Transparent
-        
-        ctx.fillStyle = gradient;
-        
-        // Draw the circle
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, circleSize, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      
-      // Draw center wave animation only if isAIActive is true
-      if (isAIActive) {
-        const waveRadius = baseSize * 0.8;
-        const waveAmplitude = isSpeaking ? 5 + (audioLevel * 10) : 2;
-        const waveFrequency = 6;
-        
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, waveRadius, 0, Math.PI * 2);
-        ctx.clip();
-        
-        // Background for wave area
-        ctx.fillStyle = 'rgba(37, 99, 235, 0.3)';
-        ctx.fillRect(centerX - waveRadius, centerY - waveRadius, waveRadius * 2, waveRadius * 2);
-        
-        // Draw wave
-        ctx.beginPath();
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
-        
-        for (let x = centerX - waveRadius; x < centerX + waveRadius; x += 1) {
-          // Create multiple overlapping waves with different phases
-          let y = centerY;
-          
-          // Main wave - responsive to audio
-          y += Math.sin((x / waveRadius) * waveFrequency + time * 3) * waveAmplitude;
-          
-          // Secondary waves
-          y += Math.sin((x / waveRadius) * waveFrequency * 1.5 + time * 2) * (waveAmplitude * 0.4);
-          y += Math.cos((x / waveRadius) * waveFrequency * 0.8 - time) * (waveAmplitude * 0.3);
-          
-          if (x === centerX - waveRadius) {
-            ctx.moveTo(x, y);
-          } else {
-            ctx.lineTo(x, y);
-          }
-        }
-        ctx.stroke();
-        ctx.restore();
-      }
-      
-      // Draw center orb
-      const centerGradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, baseSize);
-      centerGradient.addColorStop(0, 'rgba(255, 255, 255, 0.8)');
-      centerGradient.addColorStop(0.5, 'rgba(147, 197, 253, 0.9)');
-      centerGradient.addColorStop(1, 'rgba(59, 130, 246, 0.7)');
-      
-      // Add subtle glow effect when active
-      if (isSpeaking) {
-        ctx.shadowColor = 'rgba(99, 102, 241, 0.8)';
-        ctx.shadowBlur = 20;
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, baseSize - 5, 0, Math.PI * 2);
-        ctx.fillStyle = centerGradient;
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      }
-      
-      // Update time for animation
-      time += 0.05;
-      
-      // Continue animation
-      animationRef.current = requestAnimationFrame(drawSiriEffect);
-    };
+    // Gradient for wave lines
+    let gradient = ctx.createLinearGradient(0, 0, size, 0);
+    gradient.addColorStop(0, "rgba(25,255,255,0.4)");
+    gradient.addColorStop(0.5, "rgba(124,58,237,0.85)"); // violet-600
+    gradient.addColorStop(1, "rgba(16,185,129,0.4)"); // emerald-500
 
-    // Start animation
-    drawSiriEffect();
+    const maskRadius = size / 2 - 5;
 
-    // Cleanup function
+    function animate() {
+      drawSineWaves({
+        ctx,
+        width: size,
+        height: size,
+        isSpeaking,
+        wavesConfig,
+        gradient,
+        maskRadius,
+      });
+      animationRef.current = requestAnimationFrame(animate);
+    }
+
+    animate();
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [isAIActive, isSpeaking, audioLevel]);
+  }, [isSpeaking, size]);
 
   return (
-    <div className="relative w-64 h-64 mx-auto rounded-full overflow-hidden shadow-lg bg-gradient-to-b from-gray-700 to-black">
-      <canvas 
-        ref={canvasRef} 
-        width={300} 
-        height={300} 
-        className="w-full h-full"
-      />
+    <div
+      className={`relative rounded-full overflow-hidden shadow-2xl border border-slate-800 bg-gradient-to-b from-blue-950 to-slate-900 flex items-center justify-center ${className}`}
+      style={{
+        width: size,
+        height: size,
+        minWidth: size,
+        minHeight: size,
+        boxShadow:
+          "0 6px 32px 0 rgba(16, 29, 80, 0.30), 0 0px 0px 1px #334155",
+      }}
+    >
+      <AnimatePresence>
+        <motion.canvas
+          ref={canvasRef}
+          width={size}
+          height={size}
+          className="block"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        />
+      </AnimatePresence>
+      {/* Subtle glow for globe */}
+      <div className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-b from-blue-400/10 to-blue-900/0 blur-2xl" />
     </div>
   );
-};
+}
