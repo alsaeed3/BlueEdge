@@ -21,7 +21,7 @@ function drawSineWaves({
   ctx.closePath();
   ctx.clip();
 
-  // Draw globe background
+  // Draw globe background - Updated to match app's slate-900/purple-900 gradient
   const globeGradient = ctx.createRadialGradient(
     width / 2,
     height / 2,
@@ -30,9 +30,9 @@ function drawSineWaves({
     height / 2,
     maskRadius
   );
-  globeGradient.addColorStop(0, "rgba(30,58,138,0.92)"); // blue-900
-  globeGradient.addColorStop(0.7, "rgba(30,41,59,0.95)"); // slate-800
-  globeGradient.addColorStop(1, "rgba(15,23,42,0.98)"); // slate-900
+  globeGradient.addColorStop(0, "rgba(76, 29, 149, 0.95)"); // purple-900
+  globeGradient.addColorStop(0.5, "rgba(88, 28, 135, 0.97)"); // purple-950
+  globeGradient.addColorStop(1, "rgba(15, 23, 42, 0.98)"); // slate-900
 
   ctx.beginPath();
   ctx.arc(width / 2, height / 2, maskRadius, 0, Math.PI * 2);
@@ -47,7 +47,7 @@ function drawSineWaves({
     ctx.lineTo(width * 0.87, height / 2);
     ctx.strokeStyle = gradient;
     ctx.lineWidth = 2.5;
-    ctx.shadowColor = "#6366f1";
+    ctx.shadowColor = "#a855f7"; // Updated to purple-500
     ctx.shadowBlur = 5;
     ctx.stroke();
     ctx.restore();
@@ -79,7 +79,7 @@ function drawSineWaves({
     ctx.strokeStyle = gradient;
     ctx.lineWidth = wave.lineWidth;
     ctx.globalAlpha = 0.85;
-    ctx.shadowColor = "#38bdf8";
+    ctx.shadowColor = "#c084fc"; // Updated to purple-400
     ctx.shadowBlur = 6;
     ctx.stroke();
     ctx.restore();
