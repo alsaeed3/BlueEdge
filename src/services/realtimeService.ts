@@ -69,7 +69,8 @@ export default class RealtimeService {
       session: {
         modalities: ['text', 'audio'],
         tools: toolDefinitions,
-        instructions: instructions
+        instructions: instructions,
+        voice: 'verse'
       },
     };
     this.dataChannel.send(JSON.stringify(event));

@@ -67,6 +67,22 @@
   transform-origin: center center;
 }
 
+/* Animation for tool renderer fade-in */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);

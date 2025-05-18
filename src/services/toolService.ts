@@ -1,6 +1,13 @@
 // @ts-nocheck
+import { useToolStore } from '../lib/toolStore';
+
 const toolService = {
   getPageHTML: () => {
+    // Update the tool store with the active tool
+    if (typeof window !== 'undefined') {
+      useToolStore.getState().setActiveTool('getPageHTML');
+    }
+    
     // Only run on client side
     if (typeof document !== 'undefined') {
       return { success: true, html: document.documentElement.outerHTML };
@@ -9,6 +16,11 @@ const toolService = {
   },
   
   changeBackgroundColor: ({ color }) => {
+    // Update the tool store with the active tool and parameters
+    if (typeof window !== 'undefined') {
+      useToolStore.getState().setActiveTool('changeBackgroundColor', { color });
+    }
+    
     if (typeof document !== 'undefined') {
       document.body.style.backgroundColor = color;
       return { success: true, color };
@@ -17,11 +29,30 @@ const toolService = {
   },
   
   changeTextColor: ({ color }) => {
+    // Update the tool store with the active tool and parameters
+    if (typeof window !== 'undefined') {
+      useToolStore.getState().setActiveTool('changeTextColor', { color });
+    }
+    
     if (typeof document !== 'undefined') {
       document.body.style.color = color;
       return { success: true, color };
     }
     return { success: false, error: 'Not in browser environment' };
+  },
+  
+  showFingers: ({ numberOfFingers }) => {
+    // Update the tool store with the active tool and parameters
+    if (typeof window !== 'undefined') {
+      useToolStore.getState().setActiveTool('showFingers', { numberOfFingers });
+    }
+    
+    // Implementation would go here
+    return { 
+      success: true, 
+      message: `Showing ${numberOfFingers} fingers`, 
+      numberOfFingers 
+    };
   },
 };
 
