@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@photo-sphere-viewer/core": "^5.13.2",
     "@radix-ui/react-slot": "^1.2.2",
     "@react-three/fiber": "^9.1.2",
     "@splinetool/react-spline": "^4.0.0",
@@ -23,6 +24,7 @@
     "react": "^19.0.0",
     "react-chartjs-2": "^5.3.0",
     "react-dom": "^19.0.0",
+    "react-photo-sphere-viewer": "^6.2.3",
     "styled-components": "^6.1.18",
     "tailwind-merge": "^3.3.0",
     "three": "^0.176.0",
