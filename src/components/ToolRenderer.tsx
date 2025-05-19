@@ -3,6 +3,7 @@
 import React from 'react';
 import { useToolStore } from '../lib/toolStore';
 import { motion } from 'framer-motion';
+import VirtualTourPage from './VirtualTour/page';
 
 // Tool-specific components
 const BackgroundColorTool = ({ color }: { color: string }) => (
@@ -85,8 +86,8 @@ export const ToolRenderer = () => {
       return <TextColorTool color={toolParams?.color} />;
     case 'showFingers':
       return <ShowFingersTool numberOfFingers={toolParams?.numberOfFingers} />;
-    case 'getPageHTML':
-      return <GetPageHTMLTool />;
+    case 'showVirtualTour':
+      return <VirtualTourPage />;
     default:
       return null;
   }

@@ -2,10 +2,10 @@
 import { useToolStore } from '../lib/toolStore';
 
 const toolService = {
-  getPageHTML: () => {
+  showVirtualTour: () => {
     // Update the tool store with the active tool
     if (typeof window !== 'undefined') {
-      useToolStore.getState().setActiveTool('getPageHTML');
+      useToolStore.getState().setActiveTool('showVirtualTour');
     }
     
     // Only run on client side
@@ -95,8 +95,8 @@ export const toolDefinitions = [
   },
   {
     type: 'function',
-    name: 'getPageHTML',
-    description: 'Gets the HTML for the current page',
+    name: 'showVirtualTour',
+    description: 'Shows virtual tour of the apartment',
   },
 ];
 
